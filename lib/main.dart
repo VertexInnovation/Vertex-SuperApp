@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'features/entertainment_hub/entertainment_screen.dart';
+import 'features/entertainment_hub/vlogs_memes_feed.dart';
+import 'features/entertainment_hub/campus_challenges.dart';
+import 'features/entertainment_hub/ai_generated_content.dart';
+import 'features/entertainment_hub/events_streaming.dart';
+import 'features/entertainment_hub/music_podcast.dart';
 
 void main() {
   runApp(const VertexApp());
@@ -348,10 +353,10 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
               controller: _tabController,
               children: const [
                 TrendingTab(),
-                VlogMemeTab(),
-                ChallengesTab(),
-                EventsTab(),
-                MusicPodcastTab(),
+                VlogsMemesFeed(),
+                CampusChallenges(),
+                EventsStreaming(),
+                MusicPodcast(),
               ],
             ),
           ),
@@ -739,43 +744,6 @@ class TrendingTab extends StatelessWidget {
       default:
         return Colors.grey;
     }
-  }
-}
-
-// Placeholder for other tabs
-class VlogMemeTab extends StatelessWidget {
-  const VlogMemeTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Vlogs & Memes coming soon'));
-  }
-}
-
-class ChallengesTab extends StatelessWidget {
-  const ChallengesTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Challenges coming soon'));
-  }
-}
-
-class EventsTab extends StatelessWidget {
-  const EventsTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Events coming soon'));
-  }
-}
-
-class MusicPodcastTab extends StatelessWidget {
-  const MusicPodcastTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Music & Podcasts coming soon'));
   }
 }
 
