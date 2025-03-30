@@ -1,0 +1,90 @@
+vertex_app/
+│── android/                     # Android-specific files
+│── ios/                         # iOS-specific files
+│── lib/                         # Main Flutter source code
+│   ├── main.dart                 # Entry point of the application
+│   ├── core/                     # Core configurations & utilities
+│   │   ├── theme.dart             # Global theme settings
+│   │   ├── constants.dart         # App-wide constants
+│   │   ├── helpers.dart           # Helper functions
+│   │   ├── routes.dart            # Route management
+│   │   ├── services/              # Backend services (Firebase, API handling)
+│   │   │   ├── auth_service.dart   # Authentication logic
+│   │   │   ├── database_service.dart # Firestore/SQL database handling
+│   │   │   ├── internship_service.dart # Internship-related APIs
+│   │   │   ├── project_service.dart # Project collaboration backend
+│   │   │   ├── connectivity_service.dart # Networking & recommendations
+│   │   ├── models/                # Data models (JSON to Dart)
+│   │   │   ├── user_model.dart      # User profile model
+│   │   │   ├── project_model.dart   # Project details model
+│   │   │   ├── internship_model.dart # Internship details model
+│   │   │   ├── post_model.dart      # Posts/Vlogs/Memes model
+│   │   ├── widgets/                # Reusable UI components
+│   │   │   ├── custom_button.dart   # Button UI
+│   │   │   ├── profile_card.dart    # Profile display UI
+│   │   │   ├── project_tile.dart    # Project listing UI
+│   │   │   ├── internship_card.dart # Internship listing UI
+│
+│   ├── features/                  # Main feature modules
+│   │   ├── auth/                   # Authentication & onboarding
+│   │   │   ├── login_screen.dart
+│   │   │   ├── signup_screen.dart
+│   │   │   ├── forgot_password.dart
+│   │   │   ├── onboarding_screen.dart
+│   │   │   ├── user_profile.dart
+│   │   ├── home/                   # Dashboard & Navigation
+│   │   │   ├── home_screen.dart
+│   │   │   ├── bottom_nav_bar.dart
+│   │   ├── connectivity_hub/        # Networking (Like Tinder for Students)
+│   │   │   ├── connectivity_screen.dart
+│   │   │   ├── swipe_match.dart
+│   │   │   ├── chat_screen.dart
+│   │   │   ├── video_call_screen.dart
+│   │   │   ├── ai_matchmaking.dart
+│   │   ├── project_hub/            # Project collaboration (Like GitHub)
+│   │   │   ├── project_screen.dart
+│   │   │   ├── create_project.dart
+│   │   │   ├── project_detail.dart
+│   │   │   ├── kanban_board.dart
+│   │   │   ├── live_coding.dart
+│   │   │   ├── peer_reviews.dart
+│   │   ├── entertainment_hub/       # Fun & Social Media Features
+│   │   │   ├── entertainment_screen.dart
+│   │   │   ├── vlogs_memes_feed.dart
+│   │   │   ├── campus_challenges.dart
+│   │   │   ├── ai_generated_content.dart
+│   │   │   ├── events_streaming.dart
+│   │   │   ├── music_podcast.dart
+│   │   ├── internship_hub/          # Internship & Career Features
+│   │   │   ├── internship_screen.dart
+│   │   │   ├── internship_list.dart
+│   │   │   ├── internship_detail.dart
+│   │   │   ├── resume_builder.dart
+│   │   │   ├── skill_learning.dart
+│   │   │   ├── freelance_marketplace.dart
+│
+│   ├── assets/                     # Static files
+│   │   ├── images/                  # Image assets
+│   │   │   ├── logo.png
+│   │   │   ├── onboarding_bg.jpg
+│   │   ├── icons/                   # Icon assets
+│   │   │   ├── home_icon.svg
+│   │   │   ├── chat_icon.svg
+│   │   ├── fonts/                   # Custom fonts
+│   │   │   ├── Roboto-Regular.ttf
+│   │   │   ├── Montserrat-Bold.ttf
+│
+│   ├── localization/                # Multi-language support (if needed)
+│   │   ├── en.json                   # English translations
+│   │   ├── es.json                   # Spanish translations (example)
+│
+│   ├── tests/                       # Unit & widget tests
+│   │   ├── auth_test.dart
+│   │   ├── project_test.dart
+│   │   ├── internship_test.dart
+│
+│── pubspec.yaml                     # Dependencies & assets configuration
+│── README.md                         # Documentation for the project
+│── .gitignore                        # Ignoring unnecessary files
+│── analysis_options.yaml             # Linting & coding style rules
+│── LICENSE                           # Open-source license (if applicable)
