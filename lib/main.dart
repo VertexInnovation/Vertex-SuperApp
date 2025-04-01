@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'features/entertainment_hub/entertainment_screen.dart';
 import 'features/entertainment_hub/vlogs_memes_feed.dart';
 import 'features/entertainment_hub/campus_challenges.dart';
 import 'features/entertainment_hub/ai_generated_content.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
+// Import authentication components
+import 'features/authentication/auth_manager.dart';
+import 'features/authentication/presentation/signin_page.dart';
 
 void main() {
-  runApp(const VertexApp());
+  runApp(
+    // Wrap with ChangeNotifierProvider for authentication
+    ChangeNotifierProvider(
+      create: (context) => AuthManager(),
+      child: const VertexApp(),
+    ),
+  );
 }
 
 class VertexApp extends StatelessWidget {
@@ -26,7 +36,24 @@ class VertexApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Poppins',
       ),
-      home: const DashboardScreen(),
+      // Use Consumer to listen to auth state
+      home: Consumer<AuthManager>(
+        builder: (context, authManager, _) {
+          // Show loading indicator while checking auth state
+          if (authManager.status == AuthStatus.initial) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          
+          // Show either main app or auth screen based on auth state
+          return authManager.isAuthenticated 
+              ? const DashboardScreen() 
+              : const SignInPage();
+        },
+      ),
     );
   }
 }
@@ -63,10 +90,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               // TODO: Open notifications
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () {
-              // TODO: Open profile
+          Consumer<AuthManager>(
+            builder: (context, authManager, _) {
+              return PopupMenuButton(
+                icon: const Icon(Icons.person_outline),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    authManager.signOut();
+                  } else if (value == 'profile') {
+                    // TODO: Open profile page
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'profile',
+                    child: Row(
+                      children: [
+                        Icon(Icons.account_circle),
+                        SizedBox(width: 8),
+                        Text('My Profile'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout),
+                        SizedBox(width: 8),
+                        Text('Sign Out'),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             },
           ),
         ],
