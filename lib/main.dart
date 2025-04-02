@@ -9,8 +9,12 @@ import 'features/entertainment_hub/music_podcast.dart';
 // Import authentication components
 import 'features/authentication/auth_manager.dart';
 import 'features/authentication/presentation/signin_page.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+      widgetsBinding: widgetsBinding); // Preserve splash screen
   runApp(
     // Wrap with ChangeNotifierProvider for authentication
     ChangeNotifierProvider(
@@ -36,24 +40,63 @@ class VertexApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Poppins',
       ),
+      home: const SplashScreenHandler(),
       // Use Consumer to listen to auth state
-      home: Consumer<AuthManager>(
-        builder: (context, authManager, _) {
-          // Show loading indicator while checking auth state
-          if (authManager.status == AuthStatus.initial) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-          
-          // Show either main app or auth screen based on auth state
-          return authManager.isAuthenticated 
-              ? const DashboardScreen() 
-              : const SignInPage();
-        },
-      ),
+    );
+  }
+}
+
+// AuthHandler decides where to go after splash
+class AuthHandler extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<AuthManager>(
+      builder: (context, authManager, _) {
+        // Show loading indicator while checking auth state
+        if (authManager.status == AuthStatus.initial) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        // Show either main app or auth screen based on auth state
+        return authManager.isAuthenticated
+            ? const DashboardScreen()
+            : const SignInPage();
+      },
+    );
+  }
+}
+
+// Handles splash screen transition
+class SplashScreenHandler extends StatefulWidget {
+  const SplashScreenHandler({super.key});
+
+  @override
+  _SplashScreenHandlerState createState() => _SplashScreenHandlerState();
+}
+
+class _SplashScreenHandlerState extends State<SplashScreenHandler> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2), () {
+      FlutterNativeSplash.remove(); // Removes splash screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white, // Match splash screen color
+      body: const Center(
+          child: CircularProgressIndicator()), // Temporary loading screen
     );
   }
 }
@@ -67,7 +110,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
-  
+
   final List<Widget> _screens = [
     const HomeTab(),
     const ConnectivityTab(),
@@ -75,13 +118,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const EntertainmentTab(),
     const CareerTab(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vertex', 
-          style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+            const Text('Vertex', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: false,
         actions: [
           IconButton(
@@ -184,11 +227,11 @@ class HomeTab extends StatelessWidget {
           Text(
             'Welcome back, Student!',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 20),
-          
+
           // Activity Feed
           const Text(
             'Your Feed',
@@ -198,12 +241,13 @@ class HomeTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          
+
           // Sample feed items
           _buildFeedItem(
             context,
             title: 'New Project Opportunity',
-            description: 'Join the AI Research Team looking for Flutter developers',
+            description:
+                'Join the AI Research Team looking for Flutter developers',
             icon: Icons.build,
             color: Colors.blue,
           ),
@@ -221,9 +265,9 @@ class HomeTab extends StatelessWidget {
             icon: Icons.people,
             color: Colors.green,
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Quick Access
           const Text(
             'Quick Access',
@@ -233,19 +277,25 @@ class HomeTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          
+
           // Grid of quick access buttons
           GridView.count(
             crossAxisCount: 3,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              _buildQuickAccessItem(context, 'Find Study Partner', Icons.search, Colors.purple),
-              _buildQuickAccessItem(context, 'New Project', Icons.add_box, Colors.blue),
-              _buildQuickAccessItem(context, 'Browse Jobs', Icons.work, Colors.green),
-              _buildQuickAccessItem(context, 'Events', Icons.event, Colors.orange),
-              _buildQuickAccessItem(context, 'Campus Feed', Icons.school, Colors.red),
-              _buildQuickAccessItem(context, 'My Profile', Icons.person, Colors.indigo),
+              _buildQuickAccessItem(
+                  context, 'Find Study Partner', Icons.search, Colors.purple),
+              _buildQuickAccessItem(
+                  context, 'New Project', Icons.add_box, Colors.blue),
+              _buildQuickAccessItem(
+                  context, 'Browse Jobs', Icons.work, Colors.green),
+              _buildQuickAccessItem(
+                  context, 'Events', Icons.event, Colors.orange),
+              _buildQuickAccessItem(
+                  context, 'Campus Feed', Icons.school, Colors.red),
+              _buildQuickAccessItem(
+                  context, 'My Profile', Icons.person, Colors.indigo),
             ],
           ),
         ],
@@ -253,7 +303,8 @@ class HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildFeedItem(BuildContext context, {
+  Widget _buildFeedItem(
+    BuildContext context, {
     required String title,
     required String description,
     required IconData icon,
@@ -275,8 +326,9 @@ class HomeTab extends StatelessWidget {
       ),
     );
   }
-  
-  Widget _buildQuickAccessItem(BuildContext context, String label, IconData icon, Color color) {
+
+  Widget _buildQuickAccessItem(
+      BuildContext context, String label, IconData icon, Color color) {
     return InkWell(
       onTap: () {
         // TODO: Navigate to feature
@@ -327,21 +379,22 @@ class EntertainmentTab extends StatefulWidget {
   State<EntertainmentTab> createState() => _EntertainmentTabState();
 }
 
-class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerProviderStateMixin {
+class _EntertainmentTabState extends State<EntertainmentTab>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -355,18 +408,18 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
                 Text(
                   "Entertainment Hub",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   "Discover fun and relaxation in your campus community",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                        color: Colors.grey[600],
+                      ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Search Bar
                 Container(
                   decoration: BoxDecoration(
@@ -382,12 +435,12 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
               ],
             ),
           ),
-          
+
           // Tab Bar for different entertainment sections
           TabBar(
             controller: _tabController,
@@ -403,7 +456,7 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
               Tab(text: "Music & Podcasts", icon: Icon(Icons.headphones)),
             ],
           ),
-          
+
           // Tab content
           Expanded(
             child: TabBarView(
@@ -428,7 +481,7 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
       ),
     );
   }
-  
+
   void _showContentCreationDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -492,7 +545,7 @@ class _EntertainmentTabState extends State<EntertainmentTab> with SingleTickerPr
       },
     );
   }
-  
+
   Widget _buildCreationOption(
     BuildContext context, {
     required IconData icon,
@@ -533,7 +586,7 @@ class TrendingTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // AI-generated meme cards
         SizedBox(
           height: 200,
@@ -561,9 +614,9 @@ class TrendingTab extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Trending content
         const Text(
           "Trending on Campus",
@@ -573,7 +626,7 @@ class TrendingTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // Feed items
         _buildTrendingItem(
           context,
@@ -611,7 +664,7 @@ class TrendingTab extends StatelessWidget {
       ],
     );
   }
-  
+
   Widget _buildAIContentCard(
     BuildContext context, {
     required String title,
@@ -645,7 +698,8 @@ class TrendingTab extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.auto_awesome, color: Colors.white, size: 14),
+                    const Icon(Icons.auto_awesome,
+                        color: Colors.white, size: 14),
                     const SizedBox(width: 2),
                     Text(
                       "AI",
@@ -685,7 +739,7 @@ class TrendingTab extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildTrendingItem(
     BuildContext context, {
     required String username,
@@ -718,7 +772,8 @@ class TrendingTab extends StatelessWidget {
             subtitle: Text(timeAgo),
             trailing: Chip(
               label: Text(contentType),
-              backgroundColor: _getColorForContentType(contentType).withOpacity(0.2),
+              backgroundColor:
+                  _getColorForContentType(contentType).withOpacity(0.2),
               labelStyle: TextStyle(
                 color: _getColorForContentType(contentType),
                 fontSize: 12,
@@ -726,7 +781,7 @@ class TrendingTab extends StatelessWidget {
               padding: EdgeInsets.zero,
             ),
           ),
-          
+
           // Title
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -738,7 +793,7 @@ class TrendingTab extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Thumbnail
           Padding(
             padding: const EdgeInsets.all(16),
@@ -752,7 +807,7 @@ class TrendingTab extends StatelessWidget {
               // Use Image.network(thumbnailUrl) for actual thumbnail
             ),
           ),
-          
+
           // Action buttons
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
@@ -785,7 +840,7 @@ class TrendingTab extends StatelessWidget {
       ),
     );
   }
-  
+
   Color _getColorForContentType(String type) {
     switch (type) {
       case 'Vlog':
