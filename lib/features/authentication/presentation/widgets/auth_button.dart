@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../main.dart'; // Import for VertexColors
 
 class AuthButton extends StatelessWidget {
   final String text;
@@ -21,8 +22,8 @@ class AuthButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.primary,
-        foregroundColor: textColor ?? Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: backgroundColor ?? VertexColors.ceruleanBlue,
+        foregroundColor: textColor ?? Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -30,14 +31,12 @@ class AuthButton extends StatelessWidget {
         elevation: 0,
       ),
       child: isLoading
-          ? SizedBox(
+          ? const SizedBox(
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.onPrimary,
-                ),
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             )
           : Text(

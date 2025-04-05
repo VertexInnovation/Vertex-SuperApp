@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../main.dart'; // Import for VertexColors
 
 class AuthTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -10,6 +11,7 @@ class AuthTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final Color? fillColor;
 
   const AuthTextField({
     Key? key,
@@ -22,6 +24,7 @@ class AuthTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onChanged,
+    this.fillColor,
   }) : super(key: key);
 
   @override
@@ -36,7 +39,7 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: VertexColors.ceruleanBlue) : null,
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 16,
@@ -44,38 +47,30 @@ class AuthTextField extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
-          ),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
-          ),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.primary,
+            color: VertexColors.ceruleanBlue,
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-          ),
+          borderSide: BorderSide(color: Colors.red.shade300),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).colorScheme.error,
-            width: 2,
-          ),
+          borderSide: BorderSide(color: Colors.red.shade400, width: 2),
         ),
         filled: true,
-        fillColor: Theme.of(context).colorScheme.surface,
+        fillColor: fillColor ?? Colors.grey.shade50,
+        floatingLabelStyle: TextStyle(color: VertexColors.deepSapphire),
       ),
     );
   }

@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'features/authentication/auth_manager.dart';
+import 'features/authentication/presentation/signin_page.dart';
 import 'features/entertainment_hub/entertainment_screen.dart';
 import 'features/entertainment_hub/vlogs_memes_feed.dart';
 import 'features/entertainment_hub/campus_challenges.dart';
 import 'features/entertainment_hub/ai_generated_content.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
-// Import authentication components
-import 'features/authentication/auth_manager.dart';
-import 'features/authentication/presentation/signin_page.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+
+// Define app color palette as constants
+class VertexColors {
+  static const Color honeyedAmber = Color(0xFFFFC0A3);
+  static const Color deepSapphire = Color(0xFF000080);
+  static const Color ceruleanBlue = Color(0xFF2962FF);
+  static const Color oceanMist = Color(0xFF98D8D8);
+  static const Color lightAmethyst = Color(0xFFE6C2E6);
+
+  // Additional shades and variants
+  static const Color honeyedAmberLight = Color(0xFFFFD8C6);
+  static const Color deepSapphireDark = Color(0xFF000066);
+}
 
 void main() {
+  // Initialize splash screen settings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(
-      widgetsBinding: widgetsBinding); // Preserve splash screen
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   runApp(
-    // Wrap with ChangeNotifierProvider for authentication
-    ChangeNotifierProvider(
-      create: (context) => AuthManager(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthManager()),
+        // Other providers
+      ],
       child: const VertexApp(),
     ),
   );
@@ -33,35 +48,85 @@ class VertexApp extends StatelessWidget {
       title: 'Vertex SuperApp',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6200EE), // Primary purple color
-          secondary: const Color(0xFF03DAC5), // Accent teal color
+        // Use our custom color palette
+        colorScheme: ColorScheme(
+          brightness: Brightness.light,
+          primary: VertexColors.deepSapphire,
+          onPrimary: Colors.white,
+          secondary: VertexColors.ceruleanBlue,
+          onSecondary: Colors.white,
+          tertiary: VertexColors.oceanMist,
+          onTertiary: Colors.black87,
+          error: Colors.redAccent,
+          onError: Colors.white,
+          background: Colors.white,
+          onBackground: Colors.black87,
+          surface: Colors.white,
+          onSurface: Colors.black87,
         ),
+
+        // Customize specific component themes
+        appBarTheme: const AppBarTheme(
+          backgroundColor: VertexColors.honeyedAmber,
+          foregroundColor: VertexColors.deepSapphire,
+          elevation: 0,
+        ),
+
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: VertexColors.ceruleanBlue,
+          foregroundColor: Colors.white,
+        ),
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: VertexColors.ceruleanBlue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          ),
+        ),
+
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: VertexColors.deepSapphire,
+          ),
+        ),
+
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: Colors.grey.shade50,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: VertexColors.ceruleanBlue, width: 2),
+          ),
+        ),
+
         useMaterial3: true,
         fontFamily: 'Poppins',
       ),
-      home: const SplashScreenHandler(),
-      // Use Consumer to listen to auth state
+      home: const AuthHandler(),
     );
   }
 }
 
 // AuthHandler decides where to go after splash
 class AuthHandler extends StatelessWidget {
+  const AuthHandler({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthManager>(
       builder: (context, authManager, _) {
-        // Show loading indicator while checking auth state
         if (authManager.status == AuthStatus.initial) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return const SplashScreenHandler();
         }
 
-        // Show either main app or auth screen based on auth state
         return authManager.isAuthenticated
             ? const DashboardScreen()
             : const SignInPage();
@@ -123,90 +188,113 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text('Vertex', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: false,
+        title: const Text(
+          'Vertex',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: VertexColors.deepSapphire,
+          ),
+        ),
+        backgroundColor: VertexColors.honeyedAmber,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
+            color: VertexColors.deepSapphire,
             onPressed: () {
-              // TODO: Open notifications
+              // Handle notifications
             },
           ),
-          Consumer<AuthManager>(
-            builder: (context, authManager, _) {
-              return PopupMenuButton(
-                icon: const Icon(Icons.person_outline),
-                onSelected: (value) {
-                  if (value == 'logout') {
-                    authManager.signOut();
-                  } else if (value == 'profile') {
-                    // TODO: Open profile page
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'profile',
-                    child: Row(
-                      children: [
-                        Icon(Icons.account_circle),
-                        SizedBox(width: 8),
-                        Text('My Profile'),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'logout',
-                    child: Row(
-                      children: [
-                        Icon(Icons.logout),
-                        SizedBox(width: 8),
-                        Text('Sign Out'),
-                      ],
-                    ),
-                  ),
-                ],
-              );
+          PopupMenuButton(
+            icon: const Icon(Icons.person_outline, color: VertexColors.deepSapphire),
+            onSelected: (value) {
+              if (value == 'logout') {
+                final authManager = Provider.of<AuthManager>(context, listen: false);
+                authManager.signOut();
+              }
             },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'profile',
+                child: Row(
+                  children: [
+                    Icon(Icons.account_circle, color: VertexColors.ceruleanBlue),
+                    SizedBox(width: 8),
+                    Text('My Profile'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: VertexColors.ceruleanBlue),
+                    SizedBox(width: 8),
+                    Text('Sign Out'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: VertexColors.deepSapphire,
+          unselectedItemColor: Colors.grey,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people_outline),
+              activeIcon: Icon(Icons.people),
+              label: 'Connect',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.folder_outlined),
+              activeIcon: Icon(Icons.folder),
+              label: 'Projects',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.movie_outlined),
+              activeIcon: Icon(Icons.movie),
+              label: 'Entertain',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.work_outline),
+              activeIcon: Icon(Icons.work),
+              label: 'Career',
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: VertexColors.ceruleanBlue,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          // Add action
         },
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
-            activeIcon: Icon(Icons.people),
-            label: 'Connect',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build_outlined),
-            activeIcon: Icon(Icons.build),
-            label: 'Projects',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.celebration_outlined),
-            activeIcon: Icon(Icons.celebration),
-            label: 'Fun',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.work_outline),
-            activeIcon: Icon(Icons.work),
-            label: 'Career',
-          ),
-        ],
       ),
     );
   }
