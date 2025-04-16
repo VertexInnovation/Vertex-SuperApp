@@ -75,7 +75,7 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
     },
   ];
 
-  final List<Map<String, dynamic>> _aiPromptsIdeas = [
+  final List<String> _aiPromptsIdeas = [
     'A day in the life of a college student in 2050',
     'Design a solution for sustainable campus living',
     'Create a fantasy world inspired by your major',
@@ -536,3 +536,370 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                         ),
                         const SizedBox(width: 12),
                         Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Try similar
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: VertexColors.ceruleanBlue,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text('Try Similar'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPromptIdeasSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 8, 16, 12),
+          child: Text(
+            'Prompt Ideas',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: VertexColors.deepSapphire,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: VertexColors.honeyedAmber.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: VertexColors.honeyedAmber.withOpacity(0.3),
+            ),
+          ),
+          child: Column(
+            children: _aiPromptsIdeas.map((prompt) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Icon(Icons.lightbulb_outline,
+                      size: 16,
+                      color: VertexColors.honeyedAmber,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(prompt),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add_circle_outline,
+                        color: VertexColors.ceruleanBlue,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        _promptController.text = prompt;
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _getIconForType(String type) {
+    switch (type) {
+      case 'Short Story':
+        return Icons.book;
+      case 'Essay':
+        return Icons.article;
+      case 'AI Art Collection':
+        return Icons.palette;
+      default:
+        return Icons.description;
+    }
+  }
+
+  void _showToolDetail(BuildContext context, Map<String, dynamic> tool) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: (tool['color'] as Color).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      tool['icon'] as IconData,
+                      color: tool['color'] as Color,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tool['title'] as String,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: VertexColors.deepSapphire,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            CircularPercentIndicator(
+                              radius: 12,
+                              lineWidth: 3,
+                              percent: (tool['usageCredits'] as int) / 100,
+                              center: Text(
+                                '${tool['usageCredits']}%',
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              progressColor: tool['color'] as Color,
+                              backgroundColor: Colors.grey[200]!,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Usage Credits',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 16),
+              Text(
+                'Description',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                tool['description'] as String,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'How to use',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                ),
+              ),
+              const SizedBox(height: 8),
+              _buildHowToUseStep(1, 'Enter your requirements in the prompt field'),
+              _buildHowToUseStep(2, 'Select this tool from the AI Tools menu'),
+              _buildHowToUseStep(3, 'Adjust any additional parameters if needed'),
+              _buildHowToUseStep(4, 'Click "Generate" and wait for results'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _promptController.text = 'Using ${tool['title']} to ';
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: tool['color'] as Color,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text('Use This Tool'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHowToUseStep(int step, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            margin: const EdgeInsets.only(top: 2),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: VertexColors.ceruleanBlue,
+            ),
+            child: Center(
+              child: Text(
+                step.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showGeneratedContent(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'Generated Content',
+          style: TextStyle(
+            color: VertexColors.deepSapphire,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Based on: "${_promptController.text}"',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Your AI-generated content will appear here based on your prompt. This is a placeholder for the actual generated text, image, or other content that would be created by the AI model.',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'AI generated content may need additional editing',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Close',
+              style: TextStyle(color: VertexColors.deepSapphire),
+            ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Implement save functionality
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Content saved to your library!'),
+                  backgroundColor: VertexColors.deepSapphire,
+                ),
+              );
+            },
+            icon: const Icon(Icons.save),
+            label: const Text('Save'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: VertexColors.ceruleanBlue,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
