@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'features/entertainment_hub/campus_challenges.dart';
 import 'features/entertainment_hub/ai_generated_content.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
+import 'firebase_options.dart';
 
 // Define app color palette as constants
 class VertexColors {
@@ -23,9 +25,12 @@ class VertexColors {
   static const Color deepSapphireDark = Color(0xFF000066);
 }
 
-void main() {
+void main() async{
   // Initialize splash screen settings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runApp(
