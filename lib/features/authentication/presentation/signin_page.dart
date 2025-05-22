@@ -5,6 +5,8 @@ import 'signup_page.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
 import '../../../main.dart'; // Import for VertexColors
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -33,10 +35,25 @@ class _SignInPageState extends State<SignInPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (!mounted) return;
       // Error feedback is handled by the auth manager via notifyListeners
     }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return;
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -59,7 +76,10 @@ class _SignInPageState extends State<SignInPage> {
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           gradient: const RadialGradient(
-                            colors: [VertexColors.honeyedAmberLight, VertexColors.honeyedAmber],
+                            colors: [
+                              VertexColors.honeyedAmberLight,
+                              VertexColors.honeyedAmber
+                            ],
                             radius: 0.8,
                           ),
                           shape: BoxShape.circle,
@@ -71,26 +91,29 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       Text(
                         'Welcome Back',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: VertexColors.deepSapphire,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              color: VertexColors.deepSapphire,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
-                      
+
                       Text(
                         'Sign in to continue',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.black54,
-                        ),
+                              color: Colors.black54,
+                            ),
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Error message if any
                       if (authManager.error != null) ...[
                         Container(
@@ -107,7 +130,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       // Email field with updated style
                       AuthTextField(
                         controller: _emailController,
@@ -126,7 +149,7 @@ class _SignInPageState extends State<SignInPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Password field with updated style
                       AuthTextField(
                         controller: _passwordController,
@@ -136,8 +159,8 @@ class _SignInPageState extends State<SignInPage> {
                         fillColor: VertexColors.lightAmethyst.withOpacity(0.1),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword 
-                                ? Icons.visibility_outlined 
+                            _obscurePassword
+                                ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                             color: VertexColors.ceruleanBlue,
                           ),
@@ -154,7 +177,7 @@ class _SignInPageState extends State<SignInPage> {
                           return null;
                         },
                       ),
-                      
+
                       // Forgot password
                       Align(
                         alignment: Alignment.centerRight,
@@ -163,7 +186,8 @@ class _SignInPageState extends State<SignInPage> {
                             // Implement forgot password
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Password reset will be implemented soon'),
+                                content: Text(
+                                    'Password reset will be implemented soon'),
                                 backgroundColor: VertexColors.deepSapphire,
                               ),
                             );
@@ -178,7 +202,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Sign in button with updated style
                       AuthButton(
                         text: 'Sign In',
@@ -187,7 +211,7 @@ class _SignInPageState extends State<SignInPage> {
                         backgroundColor: VertexColors.deepSapphire,
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Or divider with updated style
                       Row(
                         children: [
@@ -198,7 +222,8 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               'OR',
                               style: TextStyle(
@@ -216,7 +241,7 @@ class _SignInPageState extends State<SignInPage> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Social sign in buttons with updated style
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -224,9 +249,7 @@ class _SignInPageState extends State<SignInPage> {
                           _buildSocialButton(
                             icon: Icons.g_mobiledata,
                             color: VertexColors.oceanMist,
-                            onPressed: () {
-                              // Implement Google sign in
-                            },
+                            onPressed: _signInWithGoogle,
                           ),
                           const SizedBox(width: 16),
                           _buildSocialButton(
@@ -247,7 +270,7 @@ class _SignInPageState extends State<SignInPage> {
                         ],
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Sign up link with updated style
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

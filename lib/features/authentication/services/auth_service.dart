@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthException implements Exception {
   final String message;
@@ -39,7 +41,7 @@ class AuthService {
       //   createdAt: DateTime.now(),
       // );
 
-      //harsha's code
+      //User Sign in through firebase
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email.trim(),
@@ -55,8 +57,6 @@ class AuthService {
           _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
 
       return user;
-
-      // final user = UserModel.fromFirebaseUser(userCredential.user);
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase authentication errors
       print('Firebase Auth Error: ${e.code} - ${e.message}');
@@ -98,6 +98,34 @@ class AuthService {
     } catch (e) {
       if (e is AuthException) rethrow;
       throw AuthException('Login failed: ${e.toString()}');
+    }
+  }
+
+  Future<UserModel> signInWithGoogle() async {
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) throw AuthException('Google sign-in cancelled');
+
+      final googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final user = UserModel.fromFirebaseUser(userCredential.user!);
+
+      // Save to local storage
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_userKey, jsonEncode(user.toJson()));
+      await prefs.setString(
+          _tokenKey, 'google-token-${DateTime.now().millisecondsSinceEpoch}');
+      return user;
+    } catch (e) {
+      throw AuthException(e.toString());
     }
   }
 
