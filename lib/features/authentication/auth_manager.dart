@@ -6,7 +6,7 @@ enum AuthStatus { initial, authenticated, unauthenticated }
 
 class AuthManager extends ChangeNotifier {
   final AuthService _authService = AuthService();
-  
+
   AuthStatus _status = AuthStatus.initial;
   UserModel? _user;
   String? _error;
@@ -40,10 +40,12 @@ class AuthManager extends ChangeNotifier {
     }
   }
 
+  //Task : Combine both these functions into 1 taking a 3rd param "case"
+  //Let case 0 be email pass, 1 be google, 2 be git(probably)
   Future<bool> signIn({required String email, required String password}) async {
     _setLoading(true);
     _error = null;
-    
+
     try {
       _user = await _authService.signIn(email: email, password: password);
       _status = AuthStatus.authenticated;
@@ -57,17 +59,34 @@ class AuthManager extends ChangeNotifier {
     }
   }
 
+  Future<bool> signInWithGoogle() async {
+    _setLoading(true);
+    _error = null;
+
+    try {
+      _user = await _authService.signInWithGoogle();
+      _status = AuthStatus.authenticated;
+      return true;
+    } catch (e) {
+      _error = e is AuthException ? e.message : e.toString();
+      _status = AuthStatus.unauthenticated;
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   Future<bool> signUp({
-    required String email, 
+    required String email,
     required String password,
     required String displayName,
   }) async {
     _setLoading(true);
     _error = null;
-    
+
     try {
       _user = await _authService.signUp(
-        email: email, 
+        email: email,
         password: password,
         displayName: displayName,
       );
