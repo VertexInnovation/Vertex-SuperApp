@@ -127,8 +127,8 @@ class AuthService {
         );
       } else if (authCase == 1) {
         // Google Sign-In
-        // final googleSignIn = GoogleSignIn();
-        // await googleSignIn.signOut();
+        final googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut();
         final googleUser = await GoogleSignIn().signIn();
 
         if (googleUser == null) throw AuthException("Google Sign-In cancelled");
