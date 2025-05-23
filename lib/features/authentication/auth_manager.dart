@@ -40,25 +40,6 @@ class AuthManager extends ChangeNotifier {
     }
   }
 
-  //Task : Combine both these functions into 1 taking a 3rd param "case"
-  //Let case 0 be email pass, 1 be google, 2 be git(probably)
-  // Future<bool> signIn({required String email, required String password}) async {
-  //   _setLoading(true);
-  //   _error = null;
-
-  //   try {
-  //     _user = await _authService.signIn(email: email, password: password);
-  //     _status = AuthStatus.authenticated;
-  //     return true;
-  //   } catch (e) {
-  //     _error = e is AuthException ? e.message : e.toString();
-  //     _status = AuthStatus.unauthenticated;
-  //     return false;
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
-
   Future<bool> signIn({
     required int authCase,
     String? email,
@@ -86,23 +67,6 @@ class AuthManager extends ChangeNotifier {
       _setLoading(false);
     }
   }
-
-  // Future<bool> signInWithGoogle() async {
-  //   _setLoading(true);
-  //   _error = null;
-
-  //   try {
-  //     _user = await _authService.signInWithGoogle();
-  //     _status = AuthStatus.authenticated;
-  //     return true;
-  //   } catch (e) {
-  //     _error = e is AuthException ? e.message : e.toString();
-  //     _status = AuthStatus.unauthenticated;
-  //     return false;
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
 
   Future<bool> signUp({
     required String email,
