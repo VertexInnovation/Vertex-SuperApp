@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -13,6 +14,7 @@ class AuthException implements Exception {
 class AuthService {
   static const String _userKey = 'auth_user';
   static const String _tokenKey = 'auth_token';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // This would be replaced with actual API calls in production
   // Future<UserModel> signIn({
@@ -242,8 +244,14 @@ class AuthService {
           email: email,
           password: password,
         );
-
+      // store it in firestore under a document named "users"
         final user = UserModel.fromFirebaseUser(userCredential.user!);
+        await userCredential.user?.updateDisplayName(displayName);
+        await _firestore.collection("users").doc(userCredential.user?.email).set({
+          'E-mail': userCredential.user?.email,
+          'Name': displayName,
+          'Uid': userCredential.user?.uid,
+        });
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(_userKey, jsonEncode(user.toJson()));
