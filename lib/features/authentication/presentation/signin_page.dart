@@ -6,8 +6,7 @@ import 'signup_page.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
 import '../../../main.dart'; // Import for VertexColors
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
