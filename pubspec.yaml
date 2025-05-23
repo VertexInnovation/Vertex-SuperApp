@@ -52,11 +52,11 @@ dev_dependencies:
 flutter:
     uses-material-design: true
 
-    assets:
-        - assets/images/
-        - assets/icons/
-        - assets/vertex_logo.jpg
-        - assets/sammy-line-man-receives-a-mail.png
+assets:
+    - assets/images/
+    - assets/icons/
+    - assets/vertex_logo.jpg
+    - assets/sammy-line-man-receives-a-mail.png
 
 flutter_native_splash:
     color: "#ffffff" # Background color

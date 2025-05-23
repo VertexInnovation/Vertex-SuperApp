@@ -140,7 +140,20 @@ class AuthService {
 
         userCredential =
             await FirebaseAuth.instance.signInWithCredential(credential);
-        print(userCredential);
+
+        final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+        if (isNewUser) {
+          final user = userCredential.user!;
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.email)
+              .set({
+            'E-mail': user.email,
+            'Name': user.displayName,
+            'UID': user.uid,
+            'Created At': DateTime.now(),
+          });
+        }
       } else if (authCase == 2) {
         // GitHub Sign-In (Placeholder — implement properly if needed)
         throw AuthException("GitHub sign-in not yet implemented.");
@@ -219,7 +232,8 @@ class AuthService {
             .set({
           'E-mail': userCredential.user?.email,
           'Name': displayName,
-          'Uid': userCredential.user?.uid,
+          'UID': userCredential.user?.uid,
+          'Created At': DateTime.now(),
         });
 
         final prefs = await SharedPreferences.getInstance();
