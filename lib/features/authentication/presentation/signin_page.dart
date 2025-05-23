@@ -32,6 +32,7 @@ class _SignInPageState extends State<SignInPage> {
     if (_formKey.currentState?.validate() ?? false) {
       final authManager = Provider.of<AuthManager>(context, listen: false);
       final success = await authManager.signIn(
+        authCase: 0,
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
@@ -42,19 +43,29 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) return;
-
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    final success = await authManager.signIn(
+      authCase: 1,
     );
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
   }
+
+  // Future<void> _signInWithGoogle() async {
+  //   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  //   if (googleUser == null) return;
+
+  //   final GoogleSignInAuthentication googleAuth =
+  //       await googleUser.authentication;
+
+  //   final credential = GoogleAuthProvider.credential(
+  //     accessToken: googleAuth.accessToken,
+  //     idToken: googleAuth.idToken,
+  //   );
+
+  //   await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +85,8 @@ class _SignInPageState extends State<SignInPage> {
                       // Logo container with gradient background
                       Container(
                         padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          gradient: const RadialGradient(
+                        decoration: const BoxDecoration(
+                          gradient: RadialGradient(
                             colors: [
                               VertexColors.honeyedAmberLight,
                               VertexColors.honeyedAmber
@@ -84,7 +95,7 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.school,
                           size: 80,
                           color: VertexColors.deepSapphire,
@@ -192,7 +203,7 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot Password?',
                             style: TextStyle(
                               color: VertexColors.ceruleanBlue,
@@ -288,7 +299,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Sign Up',
                               style: TextStyle(
                                 color: VertexColors.ceruleanBlue,

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthException implements Exception {
   final String message;
@@ -16,41 +15,137 @@ class AuthService {
   static const String _tokenKey = 'auth_token';
 
   // This would be replaced with actual API calls in production
+  // Future<UserModel> signIn({
+  //   required String email,
+  //   required String password,
+  // }) async {
+  //   try {
+  //     // {// Simulate network delay
+  //     // await Future.delayed(const Duration(milliseconds: 1500));
+
+  //     // Validate credentials (replace with actual API call)
+  //     if (email.isEmpty || !email.contains('@')) {
+  //       throw AuthException('Invalid email address');
+  //     }
+
+  //     if (password.isEmpty || password.length < 6) {
+  //       throw AuthException('Password must be at least 6 characters');
+  //     }
+
+  //     // // For demo, we'll create a user with the email
+  //     // final user = UserModel(
+  //     //   id: 'user-${DateTime.now().millisecondsSinceEpoch}',
+  //     //   email: email,
+  //     //   displayName: email.split('@').first,
+  //     //   createdAt: DateTime.now(),
+  //     // );
+
+  //     //User Sign in through firebase
+  //     final UserCredential userCredential =
+  //         await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //       email: email.trim(),
+  //       password: password.trim(),
+  //     );
+
+  //     final user = UserModel.fromFirebaseUser(userCredential.user!);
+
+  //     // Save user to local storage
+  //     final prefs = await SharedPreferences.getInstance();
+  //     await prefs.setString(_userKey, jsonEncode(user.toJson()));
+  //     await prefs.setString(
+  //         _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
+
+  //     return user;
+  //   } on FirebaseAuthException catch (e) {
+  //     // Handle specific Firebase authentication errors
+  //     print('Firebase Auth Error: ${e.code} - ${e.message}');
+  //     //use message for snackbar stuff
+  //     String message;
+
+  //     switch (e.code) {
+  //       case 'user-not-found':
+  //         message = 'No user found for that email.';
+  //         break;
+  //       case 'wrong-password':
+  //         message = 'Incorrect password provided.';
+  //         break;
+  //       case 'invalid-email':
+  //         message = 'The email address is not valid.';
+  //         break;
+  //       case 'user-disabled':
+  //         message = 'This user account has been disabled.';
+  //         break;
+  //       case 'too-many-requests':
+  //         message = 'Too many attempts. Try again later.';
+  //         break;
+  //       default:
+  //         message = 'Authentication error: ${e.message}';
+  //         break;
+  //     }
+
+  //     // You can show a user-friendly message based on e.code (e.g., 'user-not-found', 'wrong-password')
+  //     // Show SnackBar (requires BuildContext)
+  //     // ScaffoldMessenger.of(context).showSnackBar(
+  //     //   SnackBar(
+  //     //     content: Text(message),
+  //     //     backgroundColor: Colors.red,
+  //     //     behavior: SnackBarBehavior.floating,
+  //     //   ),
+  //     // );
+
+  //     throw AuthException('Firebase error: ${e.message}');
+  //   } catch (e) {
+  //     if (e is AuthException) rethrow;
+  //     throw AuthException('Login failed: ${e.toString()}');
+  //   }
+  // }
+
+//Working fix
   Future<UserModel> signIn({
-    required String email,
-    required String password,
+    required int authCase,
+    String? email,
+    String? password,
   }) async {
     try {
-      // {// Simulate network delay
-      // await Future.delayed(const Duration(milliseconds: 1500));
+      late UserCredential userCredential;
 
-      // Validate credentials (replace with actual API call)
-      if (email.isEmpty || !email.contains('@')) {
-        throw AuthException('Invalid email address');
+      if (authCase == 0) {
+        // Email/Password
+        if (email == null || email.isEmpty || !email.contains('@')) {
+          throw AuthException('Invalid email address');
+        }
+
+        if (password == null || password.length < 6) {
+          throw AuthException('Password must be at least 6 characters');
+        }
+
+        userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+        );
+      } else if (authCase == 1) {
+        // Google Sign-In
+        final googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) throw AuthException("Google Sign-In cancelled");
+
+        final googleAuth = await googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+      } else if (authCase == 2) {
+        // GitHub Sign-In (Placeholder — implement properly if needed)
+        throw AuthException("GitHub sign-in not yet implemented.");
+      } else {
+        throw AuthException("Invalid auth method.");
       }
-
-      if (password.isEmpty || password.length < 6) {
-        throw AuthException('Password must be at least 6 characters');
-      }
-
-      // // For demo, we'll create a user with the email
-      // final user = UserModel(
-      //   id: 'user-${DateTime.now().millisecondsSinceEpoch}',
-      //   email: email,
-      //   displayName: email.split('@').first,
-      //   createdAt: DateTime.now(),
-      // );
-
-      //User Sign in through firebase
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
 
       final user = UserModel.fromFirebaseUser(userCredential.user!);
 
-      // Save user to local storage
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_userKey, jsonEncode(user.toJson()));
       await prefs.setString(
@@ -58,11 +153,7 @@ class AuthService {
 
       return user;
     } on FirebaseAuthException catch (e) {
-      // Handle specific Firebase authentication errors
-      print('Firebase Auth Error: ${e.code} - ${e.message}');
-      //use message for snackbar stuff
       String message;
-
       switch (e.code) {
         case 'user-not-found':
           message = 'No user found for that email.';
@@ -83,51 +174,37 @@ class AuthService {
           message = 'Authentication error: ${e.message}';
           break;
       }
-
-      // You can show a user-friendly message based on e.code (e.g., 'user-not-found', 'wrong-password')
-      // Show SnackBar (requires BuildContext)
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(
-      //     content: Text(message),
-      //     backgroundColor: Colors.red,
-      //     behavior: SnackBarBehavior.floating,
-      //   ),
-      // );
-
-      throw AuthException('Firebase error: ${e.message}');
-    } catch (e) {
-      if (e is AuthException) rethrow;
-      throw AuthException('Login failed: ${e.toString()}');
+      throw AuthException(message);
     }
   }
 
-  Future<UserModel> signInWithGoogle() async {
-    try {
-      final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) throw AuthException('Google sign-in cancelled');
+  // Future<UserModel> signInWithGoogle() async {
+  //   try {
+  //     final googleUser = await GoogleSignIn().signIn();
+  //     if (googleUser == null) throw AuthException('Google sign-in cancelled');
 
-      final googleAuth = await googleUser.authentication;
+  //     final googleAuth = await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
 
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+  //     final userCredential =
+  //         await FirebaseAuth.instance.signInWithCredential(credential);
 
-      final user = UserModel.fromFirebaseUser(userCredential.user!);
+  //     final user = UserModel.fromFirebaseUser(userCredential.user!);
 
-      // Save to local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_userKey, jsonEncode(user.toJson()));
-      await prefs.setString(
-          _tokenKey, 'google-token-${DateTime.now().millisecondsSinceEpoch}');
-      return user;
-    } catch (e) {
-      throw AuthException(e.toString());
-    }
-  }
+  //     // Save to local storage
+  //     final prefs = await SharedPreferences.getInstance();
+  //     await prefs.setString(_userKey, jsonEncode(user.toJson()));
+  //     await prefs.setString(
+  //         _tokenKey, 'google-token-${DateTime.now().millisecondsSinceEpoch}');
+  //     return user;
+  //   } catch (e) {
+  //     throw AuthException(e.toString());
+  //   }
+  // }
 
   Future<UserModel> signUp({
     required String email,
@@ -192,7 +269,7 @@ class AuthService {
           );
         }
         // Re-throw other FirebaseAuthExceptions to be handled by the caller
-        throw e;
+        rethrow;
       }
     } catch (e) {
       if (e is AuthException) rethrow;
