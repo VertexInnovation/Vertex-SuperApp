@@ -134,7 +134,6 @@ class AuthService {
         if (googleUser == null) throw AuthException("Google Sign-In cancelled");
 
         final googleAuth = await googleUser.authentication;
-
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
@@ -142,6 +141,7 @@ class AuthService {
 
         userCredential =
             await FirebaseAuth.instance.signInWithCredential(credential);
+        print(userCredential);
       } else if (authCase == 2) {
         // GitHub Sign-In (Placeholder — implement properly if needed)
         throw AuthException("GitHub sign-in not yet implemented.");
@@ -183,34 +183,6 @@ class AuthService {
     }
   }
 
-  // Future<UserModel> signInWithGoogle() async {
-  //   try {
-  //     final googleUser = await GoogleSignIn().signIn();
-  //     if (googleUser == null) throw AuthException('Google sign-in cancelled');
-
-  //     final googleAuth = await googleUser.authentication;
-
-  //     final credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth.accessToken,
-  //       idToken: googleAuth.idToken,
-  //     );
-
-  //     final userCredential =
-  //         await FirebaseAuth.instance.signInWithCredential(credential);
-
-  //     final user = UserModel.fromFirebaseUser(userCredential.user!);
-
-  //     // Save to local storage
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString(_userKey, jsonEncode(user.toJson()));
-  //     await prefs.setString(
-  //         _tokenKey, 'google-token-${DateTime.now().millisecondsSinceEpoch}');
-  //     return user;
-  //   } catch (e) {
-  //     throw AuthException(e.toString());
-  //   }
-  // }
-
   Future<UserModel> signUp({
     required String email,
     required String password,
@@ -233,24 +205,19 @@ class AuthService {
         throw AuthException('Display name cannot be empty');
       }
 
-      // For demo, create a user
-      // final user = UserModel(
-      //   id: 'user-${DateTime.now().millisecondsSinceEpoch}',
-      //   email: email,
-      //   displayName: displayName,
-      //   createdAt: DateTime.now(),
-      // );
-
       try {
         final UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-      // store it in firestore under a document named "users"
+        // store it in firestore under a document named "users"
         final user = UserModel.fromFirebaseUser(userCredential.user!);
         await userCredential.user?.updateDisplayName(displayName);
-        await _firestore.collection("users").doc(userCredential.user?.email).set({
+        await _firestore
+            .collection("users")
+            .doc(userCredential.user?.email)
+            .set({
           'E-mail': userCredential.user?.email,
           'Name': displayName,
           'Uid': userCredential.user?.uid,
