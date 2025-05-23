@@ -52,6 +52,16 @@ class _SignInPageState extends State<SignInPage> {
     // Error feedback is handled by the auth manager via notifyListeners
   }
 
+  Future<void> _signInWithFacebook() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    final success = await authManager.signIn(
+      authCase: 2,
+    );
+
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -241,24 +251,25 @@ class _SignInPageState extends State<SignInPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildSocialButton(
-                            icon: Icons.g_mobiledata,
-                            color: VertexColors.oceanMist,
+                            icon: "assets/icons/google-icon.png",
+                            color: VertexColors.deepSapphire,
                             onPressed: _signInWithGoogle,
+                            size: 10.0,
                           ),
                           const SizedBox(width: 16),
                           _buildSocialButton(
-                            icon: Icons.facebook,
+                            icon: "assets/icons/facebook-icon.png",
                             color: VertexColors.ceruleanBlue,
-                            onPressed: () {
-                              // Implement Facebook sign in
-                            },
+                            size: 8,
+                            onPressed: _signInWithFacebook,
                           ),
                           const SizedBox(width: 16),
                           _buildSocialButton(
-                            icon: Icons.apple,
+                            icon: "assets/icons/github-icon.png",
                             color: Colors.black,
+                            size: 13,
                             onPressed: () {
-                              // Implement Apple sign in
+                              // Implement git sign in
                             },
                           ),
                         ],
@@ -304,8 +315,9 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildSocialButton({
-    required IconData icon,
+    required String icon,
     required Color color,
+    required double size,
     required VoidCallback onPressed,
   }) {
     return InkWell(
@@ -314,15 +326,15 @@ class _SignInPageState extends State<SignInPage> {
       child: Container(
         width: 60,
         height: 60,
+        padding: EdgeInsets.all(size),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           border: Border.all(color: color.withOpacity(0.3)),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(
+        child: Image.asset(
           icon,
-          size: 30,
-          color: color,
+
         ),
       ),
     );

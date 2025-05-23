@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
@@ -156,8 +157,35 @@ class AuthService {
           });
         }
       } else if (authCase == 2) {
-        // GitHub Sign-In (Placeholder — implement properly if needed)
-        throw AuthException("GitHub sign-in not yet implemented.");
+        // Facebook Sign-In (Placeholder — implement properly if needed)
+        final facebookAuth = FacebookAuth.instance;
+        await facebookAuth.logOut();
+        final LoginResult loginResult = await facebookAuth.login();
+
+        if (loginResult.status != LoginStatus.success) {
+          throw AuthException("Facebook Sign-In cancelled or failed");
+        }
+
+        final AccessToken accessToken = loginResult.accessToken!;
+        final credential = FacebookAuthProvider.credential(accessToken.tokenString);
+
+        userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+        final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+        if (isNewUser) {
+          final user = userCredential.user!;
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.email)
+              .set({
+            'E-mail': user.email,
+            'Name': user.displayName,
+            'UID': user.uid,
+            'Created At': DateTime.now(),
+          });
+        }
+
       } else {
         throw AuthException("Invalid auth method.");
       }
