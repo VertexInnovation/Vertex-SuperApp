@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
@@ -11,7 +10,8 @@ class VlogsMemesFeed extends StatefulWidget {
   State<VlogsMemesFeed> createState() => _VlogsMemesFeedState();
 }
 
-class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProviderStateMixin {
+class _VlogsMemesFeedState extends State<VlogsMemesFeed>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
@@ -25,12 +25,14 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
       'creator': 'Sarah Johnson',
       'creatorAvatar': 'assets/images/sarah.jpg',
       'thumbnailUrl': 'assets/images/day_in_life.jpg',
-      'videoUrl': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      'videoUrl':
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
       'likes': 342,
       'comments': 56,
       'shares': 23,
       'timeAgo': DateTime.now().subtract(const Duration(hours: 3)),
-      'description': 'Follow me around campus to see how I manage my classes, study sessions and social life!',
+      'description':
+          'Follow me around campus to see how I manage my classes, study sessions and social life!',
       'isLiked': false,
       'isSaved': false,
       'tags': ['#collegelife', '#studywitme', '#dayroutine'],
@@ -58,12 +60,14 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
       'creator': 'Alex Design',
       'creatorAvatar': 'assets/images/alex.jpg',
       'thumbnailUrl': 'assets/images/dorm_makeover.jpg',
-      'videoUrl': 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      'videoUrl':
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       'likes': 215,
       'comments': 34,
       'shares': 18,
       'timeAgo': DateTime.now().subtract(const Duration(hours: 12)),
-      'description': 'Watch how I transformed my boring dorm room into a stylish and functional space on a budget!',
+      'description':
+          'Watch how I transformed my boring dorm room into a stylish and functional space on a budget!',
       'isLiked': false,
       'isSaved': false,
       'tags': ['#dormlife', '#roomdecor', '#budgetmakeover'],
@@ -211,8 +215,8 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
         onPressed: () {
           _showCreateContentBottomSheet();
         },
-        child: const Icon(Icons.add),
         tooltip: 'Create content',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -256,7 +260,8 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
                   children: [
                     AspectRatio(
                       aspectRatio: 16 / 9,
-                      child: originalIndex == _currentPlayingIndex && _chewieController != null
+                      child: originalIndex == _currentPlayingIndex &&
+                              _chewieController != null
                           ? Chewie(controller: _chewieController!)
                           : Image.asset(
                               vlog['thumbnailUrl'],
@@ -314,7 +319,9 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildActionButton(
-                    icon: vlog['isLiked'] ? Icons.favorite : Icons.favorite_border,
+                    icon: vlog['isLiked']
+                        ? Icons.favorite
+                        : Icons.favorite_border,
                     label: '${vlog['likes']}',
                     color: vlog['isLiked'] ? Colors.red : null,
                     onTap: () {
@@ -339,9 +346,13 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
                     },
                   ),
                   _buildActionButton(
-                    icon: vlog['isSaved'] ? Icons.bookmark : Icons.bookmark_border,
+                    icon: vlog['isSaved']
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
                     label: 'Save',
-                    color: vlog['isSaved'] ? Theme.of(context).colorScheme.primary : null,
+                    color: vlog['isSaved']
+                        ? Theme.of(context).colorScheme.primary
+                        : null,
                     onTap: () {
                       setState(() {
                         vlog['isSaved'] = !vlog['isSaved'];
@@ -428,7 +439,9 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildActionButton(
-                    icon: meme['isLiked'] ? Icons.favorite : Icons.favorite_border,
+                    icon: meme['isLiked']
+                        ? Icons.favorite
+                        : Icons.favorite_border,
                     label: '${meme['likes']}',
                     color: meme['isLiked'] ? Colors.red : null,
                     onTap: () {
@@ -453,9 +466,13 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
                     },
                   ),
                   _buildActionButton(
-                    icon: meme['isSaved'] ? Icons.bookmark : Icons.bookmark_border,
+                    icon: meme['isSaved']
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
                     label: 'Save',
-                    color: meme['isSaved'] ? Theme.of(context).colorScheme.primary : null,
+                    color: meme['isSaved']
+                        ? Theme.of(context).colorScheme.primary
+                        : null,
                     onTap: () {
                       setState(() {
                         meme['isSaved'] = !meme['isSaved'];
@@ -518,9 +535,9 @@ class _VlogsMemesFeedState extends State<VlogsMemesFeed> with SingleTickerProvid
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(16),
-          child: Column(
+          child: const Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Text(
                 'Create Content',
                 style: TextStyle(fontWeight: FontWeight.bold),

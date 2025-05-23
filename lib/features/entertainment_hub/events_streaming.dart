@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:cached_network_image/cached_network_image.dart';
 
 class EventsStreaming extends StatefulWidget {
   const EventsStreaming({super.key});
@@ -9,9 +8,10 @@ class EventsStreaming extends StatefulWidget {
   State<EventsStreaming> createState() => _EventsStreamingState();
 }
 
-class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProviderStateMixin {
+class _EventsStreamingState extends State<EventsStreaming>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   final List<Map<String, dynamic>> _liveEvents = [
     {
       'title': 'Game Night: Team Battle',
@@ -22,7 +22,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'thumbnailUrl': 'assets/images/game_night.jpg',
       'isLive': true,
       'startTime': DateTime.now().subtract(const Duration(minutes: 45)),
-      'description': 'Join our weekly gaming tournament featuring Mario Kart and Super Smash Bros competitions. Prizes for top performers!',
+      'description':
+          'Join our weekly gaming tournament featuring Mario Kart and Super Smash Bros competitions. Prizes for top performers!',
     },
     {
       'title': 'Open Mic: Poetry Session',
@@ -32,8 +33,10 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'viewers': 54,
       'thumbnailUrl': 'assets/images/open_mic.jpg',
       'isLive': true,
-      'startTime': DateTime.now().subtract(const Duration(hours: 1, minutes: 15)),
-      'description': 'Express yourself through poetry, spoken word, or storytelling. Everyone gets 5 minutes to share their creative work.',
+      'startTime':
+          DateTime.now().subtract(const Duration(hours: 1, minutes: 15)),
+      'description':
+          'Express yourself through poetry, spoken word, or storytelling. Everyone gets 5 minutes to share their creative work.',
     },
     {
       'title': 'Music Jam Session',
@@ -44,10 +47,11 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'thumbnailUrl': 'assets/images/music_jam.jpg',
       'isLive': true,
       'startTime': DateTime.now().subtract(const Duration(minutes: 20)),
-      'description': 'Live jam session featuring student musicians collaborating on improvised music. Request your favorite songs in the chat!',
+      'description':
+          'Live jam session featuring student musicians collaborating on improvised music. Request your favorite songs in the chat!',
     },
   ];
-  
+
   final List<Map<String, dynamic>> _upcomingEvents = [
     {
       'title': 'Virtual Talent Show',
@@ -58,7 +62,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'thumbnailUrl': 'assets/images/talent_show.jpg',
       'isLive': false,
       'startTime': DateTime.now().add(const Duration(days: 1, hours: 4)),
-      'description': 'Showcase your special talent - singing, dancing, magic tricks, or any unique skill you want to share with the campus!',
+      'description':
+          'Showcase your special talent - singing, dancing, magic tricks, or any unique skill you want to share with the campus!',
       'isReminded': false,
     },
     {
@@ -70,7 +75,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'thumbnailUrl': 'assets/images/hackathon.jpg',
       'isLive': false,
       'startTime': DateTime.now().add(const Duration(days: 2)),
-      'description': '48-hour coding challenge to build innovative solutions for campus problems. Teams of 2-4 students. Great prizes for winners!',
+      'description':
+          '48-hour coding challenge to build innovative solutions for campus problems. Teams of 2-4 students. Great prizes for winners!',
       'isReminded': false,
     },
     {
@@ -82,7 +88,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
       'thumbnailUrl': 'assets/images/comedy_night.jpg',
       'isLive': false,
       'startTime': DateTime.now().add(const Duration(days: 3, hours: 6)),
-      'description': 'Student standup comedy showcase with special guest performers. Guaranteed laughs and good vibes!',
+      'description':
+          'Student standup comedy showcase with special guest performers. Guaranteed laughs and good vibes!',
       'isReminded': false,
     },
   ];
@@ -177,7 +184,7 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
         ),
       );
     }
-    
+
     return ListView.builder(
       padding: const EdgeInsets.all(12),
       itemCount: _liveEvents.length,
@@ -200,7 +207,7 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                 Stack(
                   children: [
                     AspectRatio(
-                      aspectRatio: 16/9,
+                      aspectRatio: 16 / 9,
                       child: Image.asset(
                         event['thumbnailUrl'],
                         fit: BoxFit.cover,
@@ -210,7 +217,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                       top: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(4),
@@ -242,7 +250,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                       bottom: 8,
                       right: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.black54,
                           borderRadius: BorderRadius.circular(4),
@@ -305,7 +314,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                               _joinLiveEvent(event);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -367,7 +377,7 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                 Stack(
                   children: [
                     AspectRatio(
-                      aspectRatio: 16/9,
+                      aspectRatio: 16 / 9,
                       child: Image.asset(
                         event['thumbnailUrl'],
                         fit: BoxFit.cover,
@@ -377,7 +387,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                       top: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.blue,
                           borderRadius: BorderRadius.circular(4),
@@ -391,7 +402,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              timeago.format(event['startTime'], allowFromNow: true),
+                              timeago.format(event['startTime'],
+                                  allowFromNow: true),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -441,10 +453,13 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                               _toggleReminder(index);
                             },
                             icon: Icon(
-                              event['isReminded'] ? Icons.notifications_active : Icons.notifications_none,
+                              event['isReminded']
+                                  ? Icons.notifications_active
+                                  : Icons.notifications_none,
                               size: 16,
                             ),
-                            label: Text(event['isReminded'] ? 'Reminded' : 'Remind me'),
+                            label: Text(
+                                event['isReminded'] ? 'Reminded' : 'Remind me'),
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -522,9 +537,10 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
             const SizedBox(height: 8),
             Text(event['description']),
             const SizedBox(height: 8),
-            event['isLive'] 
+            event['isLive']
                 ? Text('Started ${timeago.format(event['startTime'])}')
-                : Text('Starts ${timeago.format(event['startTime'], allowFromNow: true)}'),
+                : Text(
+                    'Starts ${timeago.format(event['startTime'], allowFromNow: true)}'),
           ],
         ),
         actions: [
@@ -541,7 +557,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                 _joinLiveEvent(event);
               } else {
                 // For upcoming events
-                int index = _upcomingEvents.indexWhere((e) => e['title'] == event['title']);
+                int index = _upcomingEvents
+                    .indexWhere((e) => e['title'] == event['title']);
                 if (index != -1) {
                   _toggleReminder(index);
                 }
@@ -566,9 +583,10 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
 
   void _toggleReminder(int index) {
     setState(() {
-      _upcomingEvents[index]['isReminded'] = !_upcomingEvents[index]['isReminded'];
+      _upcomingEvents[index]['isReminded'] =
+          !_upcomingEvents[index]['isReminded'];
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -595,8 +613,18 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
 
   String _getMonthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
@@ -658,11 +686,16 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                         ),
                       ),
                       items: const [
-                        DropdownMenuItem(value: 'Gaming', child: Text('Gaming')),
+                        DropdownMenuItem(
+                            value: 'Gaming', child: Text('Gaming')),
                         DropdownMenuItem(value: 'Music', child: Text('Music')),
-                        DropdownMenuItem(value: 'Performance', child: Text('Performance')),
-                        DropdownMenuItem(value: 'Technology', child: Text('Technology')),
-                        DropdownMenuItem(value: 'Entertainment', child: Text('Entertainment')),
+                        DropdownMenuItem(
+                            value: 'Performance', child: Text('Performance')),
+                        DropdownMenuItem(
+                            value: 'Technology', child: Text('Technology')),
+                        DropdownMenuItem(
+                            value: 'Entertainment',
+                            child: Text('Entertainment')),
                       ],
                       onChanged: (value) {},
                     ),
@@ -701,7 +734,8 @@ class _EventsStreamingState extends State<EventsStreaming> with SingleTickerProv
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Event created successfully! It will appear in the Upcoming Events tab.'),
+                            content: Text(
+                                'Event created successfully! It will appear in the Upcoming Events tab.'),
                           ),
                         );
                       },

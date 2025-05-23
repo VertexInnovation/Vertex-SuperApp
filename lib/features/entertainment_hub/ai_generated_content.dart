@@ -125,7 +125,7 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
   Widget _buildTopBanner() {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -150,7 +150,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
@@ -223,7 +224,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: VertexColors.ceruleanBlue, width: 2),
+                borderSide: const BorderSide(
+                    color: VertexColors.ceruleanBlue, width: 2),
               ),
               filled: true,
               fillColor: Colors.grey[50],
@@ -235,24 +237,26 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: !_isGenerating ? () {
-                    if (_promptController.text.trim().isNotEmpty) {
-                      setState(() {
-                        _isGenerating = true;
-                      });
-                      // Simulate generation process
-                      Future.delayed(const Duration(seconds: 3), () {
-                        setState(() {
-                          _isGenerating = false;
-                        });
-                        _showGeneratedContent(context);
-                      });
-                    }
-                  } : null,
-                  icon: _isGenerating 
+                  onPressed: !_isGenerating
+                      ? () {
+                          if (_promptController.text.trim().isNotEmpty) {
+                            setState(() {
+                              _isGenerating = true;
+                            });
+                            // Simulate generation process
+                            Future.delayed(const Duration(seconds: 3), () {
+                              setState(() {
+                                _isGenerating = false;
+                              });
+                              _showGeneratedContent(context);
+                            });
+                          }
+                        }
+                      : null,
+                  icon: _isGenerating
                       ? const SizedBox(
-                          width: 18, 
-                          height: 18, 
+                          width: 18,
+                          height: 18,
                           child: CircularProgressIndicator(
                             color: Colors.white,
                             strokeWidth: 2,
@@ -397,7 +401,7 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
               // Navigate to all community creations
             },
             icon: const Icon(
-              Icons.explore, 
+              Icons.explore,
               size: 16,
               color: VertexColors.ceruleanBlue,
             ),
@@ -473,7 +477,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                           ),
                         ),
                         const Spacer(),
-                        Icon(Icons.favorite, 
+                        const Icon(
+                          Icons.favorite,
                           color: VertexColors.honeyedAmber,
                           size: 16,
                         ),
@@ -486,7 +491,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        Icon(Icons.share, 
+                        const Icon(
+                          Icons.share,
                           color: VertexColors.ceruleanBlue,
                           size: 16,
                         ),
@@ -526,7 +532,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                               // View content
                             },
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: VertexColors.ceruleanBlue),
+                              side: const BorderSide(
+                                  color: VertexColors.ceruleanBlue),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -593,7 +600,8 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
                   children: [
-                    Icon(Icons.lightbulb_outline,
+                    const Icon(
+                      Icons.lightbulb_outline,
                       size: 16,
                       color: VertexColors.honeyedAmber,
                     ),
@@ -737,9 +745,11 @@ class _AIGeneratedContentState extends State<AIGeneratedContent> {
                 ),
               ),
               const SizedBox(height: 8),
-              _buildHowToUseStep(1, 'Enter your requirements in the prompt field'),
+              _buildHowToUseStep(
+                  1, 'Enter your requirements in the prompt field'),
               _buildHowToUseStep(2, 'Select this tool from the AI Tools menu'),
-              _buildHowToUseStep(3, 'Adjust any additional parameters if needed'),
+              _buildHowToUseStep(
+                  3, 'Adjust any additional parameters if needed'),
               _buildHowToUseStep(4, 'Click "Generate" and wait for results'),
               const SizedBox(height: 24),
               SizedBox(
