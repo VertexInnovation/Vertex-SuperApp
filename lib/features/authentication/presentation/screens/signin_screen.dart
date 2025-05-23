@@ -20,6 +20,7 @@ class SignInScreen extends StatelessWidget {
                 text: 'Sign In',
                 onPressed: () {
                   // Handle sign in
+
                 },
               ),
             ],
