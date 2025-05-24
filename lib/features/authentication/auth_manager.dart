@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'models/user_model.dart';
 import 'services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthStatus { initial, authenticated, unauthenticated }
 
@@ -22,12 +25,44 @@ class AuthManager extends ChangeNotifier {
     _checkAuthStatus();
   }
 
-  Future<void> _checkAuthStatus() async {
+  // Future<void> _checkAuthStatus() async {
+  //   _setLoading(true);
+  //   try {
+  //     final isLoggedIn = await _authService.isLoggedIn();
+  //     if (isLoggedIn) {
+  //       _user = await _authService.getCurrentUser();
+  //       _status = AuthStatus.authenticated;
+  //     } else {
+  //       _status = AuthStatus.unauthenticated;
+  //     }
+  //   } catch (e) {
+  //     _status = AuthStatus.unauthenticated;
+  //     _error = e.toString();
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
+
+  Future _checkAuthStatus() async {
     _setLoading(true);
     try {
+      // Check both SharedPreferences AND Firebase current user
       final isLoggedIn = await _authService.isLoggedIn();
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+
       if (isLoggedIn) {
         _user = await _authService.getCurrentUser();
+        _status = AuthStatus.authenticated;
+      } else if (firebaseUser != null && firebaseUser.emailVerified) {
+        // User is signed in with Firebase and email is verified
+        // but not saved to SharedPreferences yet - save them now
+        final user = UserModel.fromFirebaseUser(firebaseUser);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_user', jsonEncode(user.toJson()));
+        await prefs.setString('auth_token',
+            'demo-token-${DateTime.now().millisecondsSinceEpoch}');
+
+        _user = user;
         _status = AuthStatus.authenticated;
       } else {
         _status = AuthStatus.unauthenticated;
@@ -82,7 +117,7 @@ class AuthManager extends ChangeNotifier {
         password: password,
         displayName: displayName,
       );
-      _status = AuthStatus.authenticated;
+      //_status = AuthStatus.authenticated; -> Email must be verified only then authenticated is set true
       return true;
     } catch (e) {
       _error = e is AuthException ? e.message : e.toString();
@@ -114,5 +149,17 @@ class AuthManager extends ChangeNotifier {
   void clearError() {
     _error = null;
     notifyListeners();
+  }
+
+  Future<bool> resendVerificationEmail() async {
+    _error = null;
+    try {
+      await _authService.resendVerificationEmail();
+      return true;
+    } catch (e) {
+      _error = e is AuthException ? e.message : e.toString();
+      notifyListeners();
+      return false;
+    }
   }
 }
