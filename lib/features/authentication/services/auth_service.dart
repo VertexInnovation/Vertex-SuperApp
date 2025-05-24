@@ -16,6 +16,19 @@ class AuthService {
   static const String _userKey = 'auth_user';
   static const String _tokenKey = 'auth_token';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> resendVerificationEmail() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+      } else {
+        throw AuthException('No user found or email already verified');
+      }
+    } catch (e) {
+      throw AuthException(
+          'Failed to resend verification email: ${e.toString()}');
+    }
+  }
 
 //Sign In methods
   Future<UserModel> signIn({
@@ -40,6 +53,13 @@ class AuthService {
           email: email.trim(),
           password: password.trim(),
         );
+
+        final user = userCredential.user;
+        if (user != null && !user.emailVerified) {
+          await FirebaseAuth.instance.signOut();
+          throw AuthException(
+              'Please verify your email before signing in. Check your inbox for the verification link.');
+        }
       } else if (authCase == 1) {
         // Google Sign-In
         final googleSignIn = GoogleSignIn();
@@ -100,8 +120,7 @@ class AuthService {
             'Created At': DateTime.now(),
           });
         }
-      }
-      else if(authCase==3){
+      } else if (authCase == 3) {
         //github login
         final FirebaseAuth auth = FirebaseAuth.instance;
         await auth.signOut();
@@ -112,12 +131,12 @@ class AuthService {
 
         githubProvider.setCustomParameters({
           'prompt': 'select_account',
-
         });
         try {
           // Trigger the sign-in flow
           userCredential = await auth.signInWithProvider(githubProvider);
-          final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+          final isNewUser =
+              userCredential.additionalUserInfo?.isNewUser ?? false;
           if (isNewUser) {
             final user = userCredential.user!;
             await FirebaseFirestore.instance
@@ -133,19 +152,15 @@ class AuthService {
         } catch (e) {
           throw AuthException('GitHub Sign-In failed: ${e.toString()}');
         }
-
-      }
-      else {
+      } else {
         throw AuthException("Invalid auth method.");
       }
 
       final user = UserModel.fromFirebaseUser(userCredential.user!);
-
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_userKey, jsonEncode(user.toJson()));
       await prefs.setString(
           _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
-
       return user;
     } on FirebaseAuthException catch (e) {
       String message;
@@ -196,14 +211,44 @@ class AuthService {
       }
 
       try {
+        // final UserCredential userCredential =
+        //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   email: email,
+        //   password: password,
+        // );
+        // // store it in firestore under a document named "users"
+        // final user = UserModel.fromFirebaseUser(userCredential.user!);
+        // await userCredential.user?.updateDisplayName(displayName);
+        // await userCredential.user?.sendEmailVerification();
+        // await _firestore
+        //     .collection("users")
+        //     .doc(userCredential.user?.email)
+        //     .set({
+        //   'E-mail': userCredential.user?.email,
+        //   'Name': displayName,
+        //   'UID': userCredential.user?.uid,
+        //   'Created At': DateTime.now(),
+        // });
+
+        // final prefs = await SharedPreferences.getInstance();
+        // await prefs.setString(_userKey, jsonEncode(user.toJson()));
+        // await prefs.setString(
+        //     _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
+
+        // return user;
+
         final UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
-        // store it in firestore under a document named "users"
-        final user = UserModel.fromFirebaseUser(userCredential.user!);
+
         await userCredential.user?.updateDisplayName(displayName);
+
+        // Send verification email immediately after signup
+        await userCredential.user?.sendEmailVerification();
+
+        // Store user data in Firestore
         await _firestore
             .collection("users")
             .doc(userCredential.user?.email)
@@ -214,11 +259,8 @@ class AuthService {
           'Created At': DateTime.now(),
         });
 
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_userKey, jsonEncode(user.toJson()));
-        await prefs.setString(
-            _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
-
+        // Don't save to SharedPreferences yet - wait for verification
+        final user = UserModel.fromFirebaseUser(userCredential.user!);
         return user;
       } on FirebaseAuthException catch (e) {
         // Handle specific Firebase authentication errors
@@ -251,6 +293,7 @@ class AuthService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_userKey);
       await prefs.remove(_tokenKey);
+      await FirebaseAuth.instance.signOut();
       return true;
     } catch (e) {
       debugPrint('Error signing out: $e');

@@ -4,7 +4,7 @@ import '../../../../main.dart'; // Import for VertexColors
 class AuthButton extends StatelessWidget {
   final String text;
   final bool isLoading;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? backgroundColor;
   final Color? textColor;
 
@@ -12,7 +12,7 @@ class AuthButton extends StatelessWidget {
     Key? key,
     required this.text,
     this.isLoading = false,
-    required this.onPressed,
+    this.onPressed,
     this.backgroundColor,
     this.textColor,
   }) : super(key: key);
