@@ -62,6 +62,16 @@ class _SignInPageState extends State<SignInPage> {
     // Error feedback is handled by the auth manager via notifyListeners
   }
 
+  Future<void> _signInWithGithub() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    final success = await authManager.signIn(
+      authCase: 3,
+    );
+
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -268,9 +278,7 @@ class _SignInPageState extends State<SignInPage> {
                             icon: "assets/icons/github-icon.png",
                             color: Colors.black,
                             size: 13,
-                            onPressed: () {
-                              // Implement git sign in
-                            },
+                            onPressed: _signInWithGithub,
                           ),
                         ],
                       ),
