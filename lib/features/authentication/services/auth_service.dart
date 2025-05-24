@@ -157,7 +157,7 @@ class AuthService {
           });
         }
       } else if (authCase == 2) {
-        // Facebook Sign-In (Placeholder — implement properly if needed)
+        // Facebook Sign-In
         final facebookAuth = FacebookAuth.instance;
         await facebookAuth.logOut();
         final LoginResult loginResult = await facebookAuth.login();
@@ -167,10 +167,11 @@ class AuthService {
         }
 
         final AccessToken accessToken = loginResult.accessToken!;
-        final credential = FacebookAuthProvider.credential(accessToken.tokenString);
+        final credential =
+            FacebookAuthProvider.credential(accessToken.tokenString);
 
         userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+            await FirebaseAuth.instance.signInWithCredential(credential);
 
         final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
         if (isNewUser) {
@@ -185,7 +186,6 @@ class AuthService {
             'Created At': DateTime.now(),
           });
         }
-
       } else {
         throw AuthException("Invalid auth method.");
       }
