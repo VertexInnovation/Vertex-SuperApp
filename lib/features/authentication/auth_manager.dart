@@ -110,4 +110,9 @@ class AuthManager extends ChangeNotifier {
     _loading = value;
     notifyListeners();
   }
+
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
 }
