@@ -7,7 +7,6 @@ import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
 import '../../../main.dart'; // Import for VertexColors
 
-
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
@@ -26,40 +25,6 @@ class _SignInPageState extends State<SignInPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _signIn() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final authManager = Provider.of<AuthManager>(context, listen: false);
-      final success = await authManager.signIn(
-        authCase: 0,
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-
-      if (!mounted) return;
-      // Error feedback is handled by the auth manager via notifyListeners
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    final authManager = Provider.of<AuthManager>(context, listen: false);
-    final success = await authManager.signIn(
-      authCase: 1,
-    );
-
-    if (!mounted) return;
-    // Error feedback is handled by the auth manager via notifyListeners
-  }
-
-  Future<void> _signInWithFacebook() async {
-    final authManager = Provider.of<AuthManager>(context, listen: false);
-    final success = await authManager.signIn(
-      authCase: 2,
-    );
-
-    if (!mounted) return;
-    // Error feedback is handled by the auth manager via notifyListeners
   }
 
   @override
@@ -286,6 +251,8 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                           TextButton(
                             onPressed: () {
+                              Provider.of<AuthManager>(context, listen: false)
+                                  .clearError();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -334,9 +301,56 @@ class _SignInPageState extends State<SignInPage> {
         ),
         child: Image.asset(
           icon,
-
         ),
       ),
     );
+  }
+
+  //Loader when social button is clicked
+  void showLoaderDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final authManager = Provider.of<AuthManager>(context, listen: false);
+      final success = await authManager.signIn(
+        authCase: 0,
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (!mounted) return;
+      // Error feedback is handled by the auth manager via notifyListeners
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Loader after click
+    final success = await authManager.signIn(
+      authCase: 1,
+    );
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+    Navigator.of(context).pop(); // Hide loader
+  }
+
+  Future<void> _signInWithFacebook() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Invoke Loader
+    final success = await authManager.signIn(
+      authCase: 2,
+    );
+
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+    Navigator.of(context).pop(); //Hide loader
   }
 }
