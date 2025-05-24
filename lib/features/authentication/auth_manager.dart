@@ -43,6 +43,7 @@ class AuthManager extends ChangeNotifier {
   //   }
   // }
 
+
   Future _checkAuthStatus() async {
     _setLoading(true);
     try {
@@ -82,17 +83,18 @@ class AuthManager extends ChangeNotifier {
   }) async {
     _error = null;
     try {
-      if (authCase == 0) {
+      if (authCase == 0) { //Manual Email users.
         _setLoading(true);
       } else {
-        _setLoading(false);
+        _setLoading(false); //Google,FaceBook and GitHub
       }
       _user = await _authService.signIn(
         authCase: authCase,
         email: email,
         password: password,
       );
-      _status = AuthStatus.authenticated;
+      //Suggestion : Try reloading once more here to sync the changes, only if it didnt work
+      _status = AuthStatus.authenticated;      
       return true;
     } catch (e) {
       _error = e is AuthException ? e.message : e.toString();
@@ -117,7 +119,7 @@ class AuthManager extends ChangeNotifier {
         password: password,
         displayName: displayName,
       );
-      //_status = AuthStatus.authenticated; -> Email must be verified only then authenticated is set true
+      _status = AuthStatus.unauthenticated; //-> Fix tried: Email must be verified only then authenticated is set true
       return true;
     } catch (e) {
       _error = e is AuthException ? e.message : e.toString();

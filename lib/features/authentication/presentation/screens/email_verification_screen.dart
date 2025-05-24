@@ -48,7 +48,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               const Icon(
                 Icons.mark_email_unread_outlined,
                 size: 100,
-                color: VertexColors.deepSapphire, // Fixed: Use VertexColors
+                color: VertexColors.deepSapphire, 
               ),
               const SizedBox(height: 32),
               Text(
@@ -57,7 +57,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color:
-                          VertexColors.deepSapphire, // Fixed: Use VertexColors
+                          VertexColors.deepSapphire, 
                     ),
               ),
               const SizedBox(height: 16),
@@ -73,7 +73,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color:
-                          VertexColors.ceruleanBlue, // Fixed: Use VertexColors
+                          VertexColors.ceruleanBlue, 
                     ),
               ),
               const SizedBox(height: 24),
