@@ -233,9 +233,7 @@ class _SignInPageState extends State<SignInPage> {
                             icon: "assets/icons/github-icon.png",
                             color: Colors.black,
                             size: 13,
-                            onPressed: () {
-                              // Implement git sign in
-                            },
+                            onPressed: _signInWithGithub,
                           ),
                         ],
                       ),
@@ -352,5 +350,17 @@ class _SignInPageState extends State<SignInPage> {
     if (!mounted) return;
     // Error feedback is handled by the auth manager via notifyListeners
     Navigator.of(context).pop(); //Hide loader
+  }
+  
+  
+  Future<void> _signInWithGithub() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Invoke Loader
+    final success = await authManager.signIn(
+      authCase: 3,
+    );
+    Navigator.of(context).pop(); //Hide loader
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
   }
 }
