@@ -17,93 +17,7 @@ class AuthService {
   static const String _tokenKey = 'auth_token';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // This would be replaced with actual API calls in production
-  // Future<UserModel> signIn({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   try {
-  //     // {// Simulate network delay
-  //     // await Future.delayed(const Duration(milliseconds: 1500));
-
-  //     // Validate credentials (replace with actual API call)
-  //     if (email.isEmpty || !email.contains('@')) {
-  //       throw AuthException('Invalid email address');
-  //     }
-
-  //     if (password.isEmpty || password.length < 6) {
-  //       throw AuthException('Password must be at least 6 characters');
-  //     }
-
-  //     // // For demo, we'll create a user with the email
-  //     // final user = UserModel(
-  //     //   id: 'user-${DateTime.now().millisecondsSinceEpoch}',
-  //     //   email: email,
-  //     //   displayName: email.split('@').first,
-  //     //   createdAt: DateTime.now(),
-  //     // );
-
-  //     //User Sign in through firebase
-  //     final UserCredential userCredential =
-  //         await FirebaseAuth.instance.signInWithEmailAndPassword(
-  //       email: email.trim(),
-  //       password: password.trim(),
-  //     );
-
-  //     final user = UserModel.fromFirebaseUser(userCredential.user!);
-
-  //     // Save user to local storage
-  //     final prefs = await SharedPreferences.getInstance();
-  //     await prefs.setString(_userKey, jsonEncode(user.toJson()));
-  //     await prefs.setString(
-  //         _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
-
-  //     return user;
-  //   } on FirebaseAuthException catch (e) {
-  //     // Handle specific Firebase authentication errors
-  //     print('Firebase Auth Error: ${e.code} - ${e.message}');
-  //     //use message for snackbar stuff
-  //     String message;
-
-  //     switch (e.code) {
-  //       case 'user-not-found':
-  //         message = 'No user found for that email.';
-  //         break;
-  //       case 'wrong-password':
-  //         message = 'Incorrect password provided.';
-  //         break;
-  //       case 'invalid-email':
-  //         message = 'The email address is not valid.';
-  //         break;
-  //       case 'user-disabled':
-  //         message = 'This user account has been disabled.';
-  //         break;
-  //       case 'too-many-requests':
-  //         message = 'Too many attempts. Try again later.';
-  //         break;
-  //       default:
-  //         message = 'Authentication error: ${e.message}';
-  //         break;
-  //     }
-
-  //     // You can show a user-friendly message based on e.code (e.g., 'user-not-found', 'wrong-password')
-  //     // Show SnackBar (requires BuildContext)
-  //     // ScaffoldMessenger.of(context).showSnackBar(
-  //     //   SnackBar(
-  //     //     content: Text(message),
-  //     //     backgroundColor: Colors.red,
-  //     //     behavior: SnackBarBehavior.floating,
-  //     //   ),
-  //     // );
-
-  //     throw AuthException('Firebase error: ${e.message}');
-  //   } catch (e) {
-  //     if (e is AuthException) rethrow;
-  //     throw AuthException('Login failed: ${e.toString()}');
-  //   }
-  // }
-
-//Working fix
+//Sign In methods
   Future<UserModel> signIn({
     required int authCase,
     String? email,
@@ -157,7 +71,7 @@ class AuthService {
           });
         }
       } else if (authCase == 2) {
-        // Facebook Sign-In (Placeholder — implement properly if needed)
+        // Facebook Sign-In
         final facebookAuth = FacebookAuth.instance;
         await facebookAuth.logOut();
         final LoginResult loginResult = await facebookAuth.login();
@@ -167,10 +81,11 @@ class AuthService {
         }
 
         final AccessToken accessToken = loginResult.accessToken!;
-        final credential = FacebookAuthProvider.credential(accessToken.tokenString);
+        final credential =
+            FacebookAuthProvider.credential(accessToken.tokenString);
 
         userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+            await FirebaseAuth.instance.signInWithCredential(credential);
 
         final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
         if (isNewUser) {
@@ -185,7 +100,6 @@ class AuthService {
             'Created At': DateTime.now(),
           });
         }
-
       }
       else if(authCase==3){
         //github login
