@@ -186,7 +186,42 @@ class AuthService {
           });
         }
 
-      } else {
+      }
+      else if(authCase==3){
+        //github login
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        await auth.signOut();
+        await Future.delayed(Duration(milliseconds: 500));
+        final OAuthProvider githubProvider = OAuthProvider('github.com');
+        githubProvider.addScope('read:user');
+        githubProvider.addScope('user:email');
+
+        githubProvider.setCustomParameters({
+          'prompt': 'select_account',
+
+        });
+        try {
+          // Trigger the sign-in flow
+          userCredential = await auth.signInWithProvider(githubProvider);
+          final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+          if (isNewUser) {
+            final user = userCredential.user!;
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.email)
+                .set({
+              'E-mail': user.email,
+              'Name': user.displayName,
+              'UID': user.uid,
+              'Created At': DateTime.now(),
+            });
+          }
+        } catch (e) {
+          throw AuthException('GitHub Sign-In failed: ${e.toString()}');
+        }
+
+      }
+      else {
         throw AuthException("Invalid auth method.");
       }
 
