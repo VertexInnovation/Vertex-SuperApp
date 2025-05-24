@@ -55,11 +55,17 @@ class AuthService {
         );
 
         final user = userCredential.user;
-        if (user != null && !user.emailVerified) {
-          await FirebaseAuth.instance.signOut();
-          throw AuthException(
-              'Please verify your email before signing in. Check your inbox for the verification link.');
+        if (user != null) {
+          await user.reload();
+          final refreshedUser = FirebaseAuth.instance.currentUser;
+          if (refreshedUser != null && !refreshedUser.emailVerified) {
+            await FirebaseAuth.instance.signOut();
+            throw AuthException(
+                'Please verify your email before signing in. Check your inbox for the verification link.');
+          } 
         }
+        //If the above block is skipped the user has authenticated successfully.
+
       } else if (authCase == 1) {
         // Google Sign-In
         final googleSignIn = GoogleSignIn();
@@ -211,32 +217,6 @@ class AuthService {
       }
 
       try {
-        // final UserCredential userCredential =
-        //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //   email: email,
-        //   password: password,
-        // );
-        // // store it in firestore under a document named "users"
-        // final user = UserModel.fromFirebaseUser(userCredential.user!);
-        // await userCredential.user?.updateDisplayName(displayName);
-        // await userCredential.user?.sendEmailVerification();
-        // await _firestore
-        //     .collection("users")
-        //     .doc(userCredential.user?.email)
-        //     .set({
-        //   'E-mail': userCredential.user?.email,
-        //   'Name': displayName,
-        //   'UID': userCredential.user?.uid,
-        //   'Created At': DateTime.now(),
-        // });
-
-        // final prefs = await SharedPreferences.getInstance();
-        // await prefs.setString(_userKey, jsonEncode(user.toJson()));
-        // await prefs.setString(
-        //     _tokenKey, 'demo-token-${DateTime.now().millisecondsSinceEpoch}');
-
-        // return user;
-
         final UserCredential userCredential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,

@@ -329,6 +329,7 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
+
   Future<void> _signInWithGoogle() async {
     final authManager = Provider.of<AuthManager>(context, listen: false);
     showLoaderDialog(context); //Loader after click
