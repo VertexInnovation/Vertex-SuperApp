@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vertex_app/features/authentication/presentation/screens/forgot_password.dart';
 import '../auth_manager.dart';
 import 'signup_page.dart';
 import 'widgets/auth_button.dart';
@@ -26,19 +27,6 @@ class _SignInPageState extends State<SignInPage> {
     super.dispose();
   }
 
-  Future<void> _signIn() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final authManager = Provider.of<AuthManager>(context, listen: false);
-      final success = await authManager.signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-      
-      if (!mounted) return;
-      // Error feedback is handled by the auth manager via notifyListeners
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,40 +45,46 @@ class _SignInPageState extends State<SignInPage> {
                       // Logo container with gradient background
                       Container(
                         padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          gradient: const RadialGradient(
-                            colors: [VertexColors.honeyedAmberLight, VertexColors.honeyedAmber],
+                        decoration: const BoxDecoration(
+                          gradient: RadialGradient(
+                            colors: [
+                              VertexColors.honeyedAmberLight,
+                              VertexColors.honeyedAmber
+                            ],
                             radius: 0.8,
                           ),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.school,
                           size: 80,
                           color: VertexColors.deepSapphire,
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       Text(
                         'Welcome Back',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: VertexColors.deepSapphire,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              color: VertexColors.deepSapphire,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
-                      
+
                       Text(
                         'Sign in to continue',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.black54,
-                        ),
+                              color: Colors.black54,
+                            ),
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Error message if any
                       if (authManager.error != null) ...[
                         Container(
@@ -107,7 +101,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       // Email field with updated style
                       AuthTextField(
                         controller: _emailController,
@@ -126,7 +120,7 @@ class _SignInPageState extends State<SignInPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Password field with updated style
                       AuthTextField(
                         controller: _passwordController,
@@ -136,8 +130,8 @@ class _SignInPageState extends State<SignInPage> {
                         fillColor: VertexColors.lightAmethyst.withOpacity(0.1),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword 
-                                ? Icons.visibility_outlined 
+                            _obscurePassword
+                                ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                             color: VertexColors.ceruleanBlue,
                           ),
@@ -154,21 +148,20 @@ class _SignInPageState extends State<SignInPage> {
                           return null;
                         },
                       ),
-                      
+
                       // Forgot password
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
                             // Implement forgot password
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Password reset will be implemented soon'),
-                                backgroundColor: VertexColors.deepSapphire,
-                              ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgotPassword()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot Password?',
                             style: TextStyle(
                               color: VertexColors.ceruleanBlue,
@@ -178,7 +171,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Sign in button with updated style
                       AuthButton(
                         text: 'Sign In',
@@ -187,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                         backgroundColor: VertexColors.deepSapphire,
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Or divider with updated style
                       Row(
                         children: [
@@ -198,7 +191,8 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Text(
                               'OR',
                               style: TextStyle(
@@ -216,38 +210,35 @@ class _SignInPageState extends State<SignInPage> {
                         ],
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Social sign in buttons with updated style
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _buildSocialButton(
-                            icon: Icons.g_mobiledata,
-                            color: VertexColors.oceanMist,
-                            onPressed: () {
-                              // Implement Google sign in
-                            },
+                            icon: "assets/icons/google-icon.png",
+                            color: VertexColors.deepSapphire,
+                            onPressed: _signInWithGoogle,
+                            size: 10.0,
                           ),
                           const SizedBox(width: 16),
                           _buildSocialButton(
-                            icon: Icons.facebook,
+                            icon: "assets/icons/facebook-icon.png",
                             color: VertexColors.ceruleanBlue,
-                            onPressed: () {
-                              // Implement Facebook sign in
-                            },
+                            size: 8,
+                            onPressed: _signInWithFacebook,
                           ),
                           const SizedBox(width: 16),
                           _buildSocialButton(
-                            icon: Icons.apple,
+                            icon: "assets/icons/github-icon.png",
                             color: Colors.black,
-                            onPressed: () {
-                              // Implement Apple sign in
-                            },
+                            size: 13,
+                            onPressed: _signInWithGithub,
                           ),
                         ],
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Sign up link with updated style
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -258,6 +249,8 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                           TextButton(
                             onPressed: () {
+                              Provider.of<AuthManager>(context, listen: false)
+                                  .clearError();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -265,7 +258,7 @@ class _SignInPageState extends State<SignInPage> {
                                 ),
                               );
                             },
-                            child: Text(
+                            child: const Text(
                               'Sign Up',
                               style: TextStyle(
                                 color: VertexColors.ceruleanBlue,
@@ -287,8 +280,9 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Widget _buildSocialButton({
-    required IconData icon,
+    required String icon,
     required Color color,
+    required double size,
     required VoidCallback onPressed,
   }) {
     return InkWell(
@@ -297,17 +291,75 @@ class _SignInPageState extends State<SignInPage> {
       child: Container(
         width: 60,
         height: 60,
+        padding: EdgeInsets.all(size),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
           border: Border.all(color: color.withOpacity(0.3)),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Icon(
+        child: Image.asset(
           icon,
-          size: 30,
-          color: color,
         ),
       ),
     );
+  }
+
+  //Loader when social button is clicked
+  void showLoaderDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final authManager = Provider.of<AuthManager>(context, listen: false);
+      final success = await authManager.signIn(
+        authCase: 0,
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (!mounted) return;
+      // Error feedback is handled by the auth manager via notifyListeners
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Loader after click
+    final success = await authManager.signIn(
+      authCase: 1,
+    );
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+    Navigator.of(context).pop(); // Hide loader
+  }
+
+  Future<void> _signInWithFacebook() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Invoke Loader
+    final success = await authManager.signIn(
+      authCase: 2,
+    );
+
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
+    Navigator.of(context).pop(); //Hide loader
+  }
+
+  Future<void> _signInWithGithub() async {
+    final authManager = Provider.of<AuthManager>(context, listen: false);
+    showLoaderDialog(context); //Invoke Loader
+    final success = await authManager.signIn(
+      authCase: 3,
+    );
+    Navigator.of(context).pop(); //Hide loader
+    if (!mounted) return;
+    // Error feedback is handled by the auth manager via notifyListeners
   }
 }

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../auth_manager.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
+import 'screens/email_verification_screen.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -30,13 +31,12 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
-  Future<void> _signUp() async {
+  Future _signUp() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (!_acceptTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please accept the terms and conditions'),
-          ),
+              content: Text('Please accept the terms and conditions')),
         );
         return;
       }
@@ -47,10 +47,17 @@ class _SignUpPageState extends State<SignUpPage> {
         password: _passwordController.text,
         displayName: _nameController.text.trim(),
       );
-      
+
       if (success && mounted) {
-        // No need to navigate - main.dart Consumer will handle it
-        Navigator.of(context).pop();
+        // Navigate to email verification screen instead of main app
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationScreen(
+              email: _emailController.text.trim(),
+            ),
+          ),
+        );
       }
     }
   }
@@ -89,26 +96,35 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text(
                         'Create Account',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Join the Vertex community',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
+                            ),
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Error message if any
                       if (authManager.error != null) ...[
                         Container(
                           padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .error
+                                .withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -120,7 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       // Name field
                       AuthTextField(
                         controller: _nameController,
@@ -134,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Email field
                       AuthTextField(
                         controller: _emailController,
@@ -152,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Password field
                       AuthTextField(
                         controller: _passwordController,
@@ -161,8 +177,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         prefixIcon: Icons.lock_outline,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword 
-                                ? Icons.visibility_outlined 
+                            _obscurePassword
+                                ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                           ),
                           onPressed: () {
@@ -182,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Confirm password field
                       AuthTextField(
                         controller: _confirmPasswordController,
@@ -191,13 +207,14 @@ class _SignUpPageState extends State<SignUpPage> {
                         prefixIcon: Icons.lock_outline,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscureConfirmPassword 
-                                ? Icons.visibility_outlined 
+                            _obscureConfirmPassword
+                                ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                           ),
                           onPressed: () {
                             setState(() {
-                              _obscureConfirmPassword = !_obscureConfirmPassword;
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
                             });
                           },
                         ),
@@ -212,7 +229,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Terms and conditions checkbox
                       Row(
                         children: [
@@ -229,13 +246,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               text: TextSpan(
                                 text: 'I accept the ',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                                 children: [
                                   TextSpan(
                                     text: 'Terms of Service',
                                     style: TextStyle(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -245,7 +264,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                   TextSpan(
                                     text: 'Privacy Policy',
                                     style: TextStyle(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -256,7 +276,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ],
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Sign up button
                       AuthButton(
                         text: 'Create Account',
@@ -264,7 +284,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: _signUp,
                       ),
                       const SizedBox(height: 24),
-                      
+
                       // Already have account link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -272,7 +292,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             'Already have an account? ',
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.8),
                             ),
                           ),
                           TextButton(

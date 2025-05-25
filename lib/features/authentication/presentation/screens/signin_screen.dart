@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../auth_manager.dart';
 import '../widgets/auth_button.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -20,6 +18,7 @@ class SignInScreen extends StatelessWidget {
                 text: 'Sign In',
                 onPressed: () {
                   // Handle sign in
+
                 },
               ),
             ],

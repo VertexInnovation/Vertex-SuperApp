@@ -64,9 +64,7 @@ class _MusicPodcastState extends State<MusicPodcast> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _featuredContent.isEmpty 
-        ? _buildEmptyState() 
-        : _buildContentList(),
+      body: _featuredContent.isEmpty ? _buildEmptyState() : _buildContentList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showCreateContentModal();
@@ -88,17 +86,14 @@ class _MusicPodcastState extends State<MusicPodcast> {
               color: VertexColors.lightAmethyst,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.headphones, 
-              size: 64, 
-              color: VertexColors.deepSapphire
-            ),
+            child: const Icon(Icons.headphones,
+                size: 64, color: VertexColors.deepSapphire),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             "Music & Podcasts",
             style: TextStyle(
-              fontSize: 24, 
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: VertexColors.deepSapphire,
             ),
@@ -108,10 +103,7 @@ class _MusicPodcastState extends State<MusicPodcast> {
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               "Discover and create music and podcasts by students!",
-              style: TextStyle(
-                color: Colors.grey[600], 
-                fontSize: 16
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
               textAlign: TextAlign.center,
             ),
           ),
@@ -219,7 +211,9 @@ class _MusicPodcastState extends State<MusicPodcast> {
                               color: VertexColors.oceanMist.withOpacity(0.3),
                               child: Center(
                                 child: Icon(
-                                  item['type'] == 'Podcast' ? Icons.mic : Icons.music_note,
+                                  item['type'] == 'Podcast'
+                                      ? Icons.mic
+                                      : Icons.music_note,
                                   size: 30,
                                   color: VertexColors.deepSapphire,
                                 ),
@@ -279,16 +273,17 @@ class _MusicPodcastState extends State<MusicPodcast> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: item['type'] == 'Podcast' 
-                                    ? VertexColors.honeyedAmber.withOpacity(0.3) 
-                                    : VertexColors.lightAmethyst.withOpacity(0.3),
+                                color: item['type'] == 'Podcast'
+                                    ? VertexColors.honeyedAmber.withOpacity(0.3)
+                                    : VertexColors.lightAmethyst
+                                        .withOpacity(0.3),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
                                 item['type'],
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: item['type'] == 'Podcast' 
+                                  color: item['type'] == 'Podcast'
                                       ? VertexColors.deepSapphire
                                       : VertexColors.deepSapphire,
                                 ),
@@ -326,7 +321,8 @@ class _MusicPodcastState extends State<MusicPodcast> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 leading: Container(
                   width: 60,
                   height: 60,
@@ -395,7 +391,7 @@ class _MusicPodcastState extends State<MusicPodcast> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             VertexColors.oceanMist,
@@ -635,4 +631,3 @@ class _MusicPodcastState extends State<MusicPodcast> {
     );
   }
 }
-
