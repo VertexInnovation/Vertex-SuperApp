@@ -43,7 +43,6 @@ class AuthManager extends ChangeNotifier {
   //   }
   // }
 
-
   Future _checkAuthStatus() async {
     _setLoading(true);
     try {
@@ -54,17 +53,25 @@ class AuthManager extends ChangeNotifier {
       if (isLoggedIn) {
         _user = await _authService.getCurrentUser();
         _status = AuthStatus.authenticated;
-      } else if (firebaseUser != null && firebaseUser.emailVerified) {
-        // User is signed in with Firebase and email is verified
-        // but not saved to SharedPreferences yet - save them now
-        final user = UserModel.fromFirebaseUser(firebaseUser);
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_user', jsonEncode(user.toJson()));
-        await prefs.setString('auth_token',
-            'demo-token-${DateTime.now().millisecondsSinceEpoch}');
+      } else if (firebaseUser != null) {
+        // Reload to get latest verification status
+        await firebaseUser.reload();
+        final refreshedUser = FirebaseAuth.instance.currentUser;
 
-        _user = user;
-        _status = AuthStatus.authenticated;
+        if (refreshedUser != null && refreshedUser.emailVerified) {
+          // User is signed in with Firebase and email is verified
+          // but not saved to SharedPreferences yet - save them now
+          final user = UserModel.fromFirebaseUser(refreshedUser);
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_user', jsonEncode(user.toJson()));
+          await prefs.setString('auth_token',
+              'demo-token-${DateTime.now().millisecondsSinceEpoch}');
+
+          _user = user;
+          _status = AuthStatus.authenticated;
+        } else {
+          _status = AuthStatus.unauthenticated;
+        }
       } else {
         _status = AuthStatus.unauthenticated;
       }
@@ -83,7 +90,8 @@ class AuthManager extends ChangeNotifier {
   }) async {
     _error = null;
     try {
-      if (authCase == 0) { //Manual Email users.
+      if (authCase == 0) {
+        //Manual Email users.
         _setLoading(true);
       } else {
         _setLoading(false); //Google,FaceBook and GitHub
@@ -94,7 +102,7 @@ class AuthManager extends ChangeNotifier {
         password: password,
       );
       //Suggestion : Try reloading once more here to sync the changes, only if it didnt work
-      _status = AuthStatus.authenticated;      
+      _status = AuthStatus.authenticated;
       return true;
     } catch (e) {
       _error = e is AuthException ? e.message : e.toString();
@@ -119,7 +127,8 @@ class AuthManager extends ChangeNotifier {
         password: password,
         displayName: displayName,
       );
-      _status = AuthStatus.unauthenticated; //-> Fix tried: Email must be verified only then authenticated is set true
+      _status = AuthStatus
+          .unauthenticated; //-> Fix tried: Email must be verified only then authenticated is set true
       return true;
     } catch (e) {
       _error = e is AuthException ? e.message : e.toString();
