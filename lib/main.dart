@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,6 @@ import 'features/entertainment_hub/vlogs_memes_feed.dart';
 import 'features/entertainment_hub/campus_challenges.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
-import 'firebase_options.dart';
 import 'firebase_options.dart';
 
 // Define app color palette as constants

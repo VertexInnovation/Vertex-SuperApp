@@ -158,7 +158,7 @@ class _SignInPageState extends State<SignInPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ForgotPassword()),
+                                  builder: (context) => const ForgotPassword()),
                             );
                           },
                           child: const Text(
@@ -351,8 +351,7 @@ class _SignInPageState extends State<SignInPage> {
     // Error feedback is handled by the auth manager via notifyListeners
     Navigator.of(context).pop(); //Hide loader
   }
-  
-  
+
   Future<void> _signInWithGithub() async {
     final authManager = Provider.of<AuthManager>(context, listen: false);
     showLoaderDialog(context); //Invoke Loader
