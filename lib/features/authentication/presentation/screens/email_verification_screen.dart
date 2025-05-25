@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../auth_manager.dart';
 import '../signin_page.dart';
 import '../signup_page.dart';
@@ -48,7 +47,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               const Icon(
                 Icons.mark_email_unread_outlined,
                 size: 100,
-                color: VertexColors.deepSapphire, 
+                color: VertexColors.deepSapphire,
               ),
               const SizedBox(height: 32),
               Text(
@@ -56,8 +55,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color:
-                          VertexColors.deepSapphire, 
+                      color: VertexColors.deepSapphire,
                     ),
               ),
               const SizedBox(height: 16),
@@ -72,8 +70,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color:
-                          VertexColors.ceruleanBlue, 
+                      color: VertexColors.ceruleanBlue,
                     ),
               ),
               const SizedBox(height: 24),

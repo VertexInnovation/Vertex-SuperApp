@@ -62,10 +62,9 @@ class AuthService {
             await FirebaseAuth.instance.signOut();
             throw AuthException(
                 'Please verify your email before signing in. Check your inbox for the verification link.');
-          } 
+          }
         }
         //If the above block is skipped the user has authenticated successfully.
-
       } else if (authCase == 1) {
         // Google Sign-In
         final googleSignIn = GoogleSignIn();
@@ -130,7 +129,7 @@ class AuthService {
         //github login
         final FirebaseAuth auth = FirebaseAuth.instance;
         await auth.signOut();
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
         final OAuthProvider githubProvider = OAuthProvider('github.com');
         githubProvider.addScope('read:user');
         githubProvider.addScope('user:email');
@@ -162,7 +161,8 @@ class AuthService {
         throw AuthException("Invalid auth method.");
       }
 
-      final user = UserModel.fromFirebaseUser(userCredential.user!);
+      final currentUser = FirebaseAuth.instance.currentUser!;
+      final user = UserModel.fromFirebaseUser(currentUser);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_userKey, jsonEncode(user.toJson()));
       await prefs.setString(
