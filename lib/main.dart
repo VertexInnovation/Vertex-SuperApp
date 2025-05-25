@@ -1,14 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'features/authentication/auth_manager.dart';
 import 'features/authentication/presentation/signin_page.dart';
-import 'features/entertainment_hub/entertainment_screen.dart';
 import 'features/entertainment_hub/vlogs_memes_feed.dart';
 import 'features/entertainment_hub/campus_challenges.dart';
-import 'features/entertainment_hub/ai_generated_content.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
+import 'firebase_options.dart';
 
 // Define app color palette as constants
 class VertexColors {
@@ -23,11 +23,17 @@ class VertexColors {
   static const Color deepSapphireDark = Color(0xFF000066);
 }
 
-void main() {
+void main() async {
   // Initialize splash screen settings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
@@ -49,7 +55,7 @@ class VertexApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Use our custom color palette
-        colorScheme: ColorScheme(
+        colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: VertexColors.deepSapphire,
           onPrimary: Colors.white,
@@ -59,8 +65,6 @@ class VertexApp extends StatelessWidget {
           onTertiary: Colors.black87,
           error: Colors.redAccent,
           onError: Colors.white,
-          background: Colors.white,
-          onBackground: Colors.black87,
           surface: Colors.white,
           onSurface: Colors.black87,
         ),
@@ -103,7 +107,8 @@ class VertexApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: VertexColors.ceruleanBlue, width: 2),
+            borderSide:
+                const BorderSide(color: VertexColors.ceruleanBlue, width: 2),
           ),
         ),
 
@@ -158,9 +163,9 @@ class _SplashScreenHandlerState extends State<SplashScreenHandler> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.white, // Match splash screen color
-      body: const Center(
+      body: Center(
           child: CircularProgressIndicator()), // Temporary loading screen
     );
   }
@@ -206,10 +211,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           PopupMenuButton(
-            icon: const Icon(Icons.person_outline, color: VertexColors.deepSapphire),
+            icon: const Icon(Icons.person_outline,
+                color: VertexColors.deepSapphire),
             onSelected: (value) {
               if (value == 'logout') {
-                final authManager = Provider.of<AuthManager>(context, listen: false);
+                final authManager =
+                    Provider.of<AuthManager>(context, listen: false);
                 authManager.signOut();
               }
             },
@@ -218,7 +225,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.account_circle, color: VertexColors.ceruleanBlue),
+                    Icon(Icons.account_circle,
+                        color: VertexColors.ceruleanBlue),
                     SizedBox(width: 8),
                     Text('My Profile'),
                   ],
@@ -514,12 +522,12 @@ class _EntertainmentTabState extends State<EntertainmentTab>
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: TextField(
+                  child: const TextField(
                     decoration: InputDecoration(
                       hintText: "Search for content, events, or creators...",
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -564,8 +572,8 @@ class _EntertainmentTabState extends State<EntertainmentTab>
         onPressed: () {
           _showContentCreationDialog(context);
         },
-        child: const Icon(Icons.add),
         tooltip: "Create new content",
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -783,15 +791,14 @@ class TrendingTab extends StatelessWidget {
                   color: Colors.purple.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.auto_awesome,
-                        color: Colors.white, size: 14),
-                    const SizedBox(width: 2),
+                    Icon(Icons.auto_awesome, color: Colors.white, size: 14),
+                    SizedBox(width: 2),
                     Text(
                       "AI",
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ],
                 ),

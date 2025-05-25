@@ -8,11 +8,12 @@ class CampusChallenges extends StatefulWidget {
   State<CampusChallenges> createState() => _CampusChallengesState();
 }
 
-class _CampusChallengesState extends State<CampusChallenges> with SingleTickerProviderStateMixin {
+class _CampusChallengesState extends State<CampusChallenges>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedCategoryIndex = 0;
-  bool _isJoined = false;
-  bool _showOnlyActive = false;
+  final bool _isJoined = false;
+  final bool _showOnlyActive = false;
 
   final List<Map<String, dynamic>> _categories = [
     {'name': 'All', 'icon': Icons.category},
@@ -45,7 +46,11 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
       'daysLeft': 3,
       'category': 'Creative',
       'difficulty': 'Easy',
-      'rewards': ['Featured in Campus Magazine', '100 Vertex Points', 'Photography Workshop Access'],
+      'rewards': [
+        'Featured in Campus Magazine',
+        '100 Vertex Points',
+        'Photography Workshop Access'
+      ],
       'coverImage': 'assets/images/photo_contest.jpg',
       'progress': 0.8,
       'isActive': true,
@@ -59,7 +64,11 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
       'daysLeft': 7,
       'category': 'Academic',
       'difficulty': 'Hard',
-      'rewards': ['Badge: Research Pro', '150 Vertex Points', 'Access to Premium Research Database'],
+      'rewards': [
+        'Badge: Research Pro',
+        '150 Vertex Points',
+        'Access to Premium Research Database'
+      ],
       'coverImage': 'assets/images/research_marathon.jpg',
       'progress': 0.6,
       'isActive': true,
@@ -73,7 +82,11 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
       'daysLeft': 0,
       'category': 'Fitness',
       'difficulty': 'Medium',
-      'rewards': ['Badge: Early Bird Fitness', '75 Vertex Points', 'Gym Discount'],
+      'rewards': [
+        'Badge: Early Bird Fitness',
+        '75 Vertex Points',
+        'Gym Discount'
+      ],
       'coverImage': 'assets/images/morning_workout.jpg',
       'progress': 1.0,
       'isActive': false,
@@ -87,7 +100,11 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
       'daysLeft': 2,
       'category': 'Social',
       'difficulty': 'Easy',
-      'rewards': ['Badge: Campus Angel', '50 Vertex Points', 'Community Service Credit'],
+      'rewards': [
+        'Badge: Campus Angel',
+        '50 Vertex Points',
+        'Community Service Credit'
+      ],
       'coverImage': 'assets/images/kindness_acts.jpg',
       'progress': 0.7,
       'isActive': true,
@@ -251,7 +268,7 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
     return Column(
       children: [
         // Categories
-        Container(
+        SizedBox(
           height: 80,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -329,7 +346,8 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
                             lineHeight: 14.0,
                             percent: challenge['progress'],
                             backgroundColor: Colors.grey[200],
-                            progressColor: Theme.of(context).colorScheme.primary,
+                            progressColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                         ],
                       ),
@@ -345,7 +363,7 @@ class _CampusChallengesState extends State<CampusChallenges> with SingleTickerPr
   }
 
   Widget _buildMyChallengesTab() {
-    return Center(
+    return const Center(
       child: Text("My Challenges"),
     );
   }

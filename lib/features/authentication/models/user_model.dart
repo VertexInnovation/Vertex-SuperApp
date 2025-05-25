@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 class UserModel {
   final String? id;
   final String email;
@@ -25,6 +27,17 @@ class UserModel {
           ? DateTime.parse(json['createdAt']) 
           : null,
       additionalInfo: json['additionalInfo'],
+    );
+  }
+
+  factory UserModel.fromFirebaseUser(User user) {
+    return UserModel(
+      id: user.uid,
+      email: user.email ?? '', // Firebase email can sometimes be null, provide a fallback
+      displayName: user.displayName ?? user.email?.split('@').first, // Use email part if displayName is null
+      photoUrl: user.photoURL,
+      createdAt: user.metadata.creationTime ?? DateTime.now(), // Use Firebase creation time
+      additionalInfo: {'Nothing': 'Absolutely nothing'},
     );
   }
 

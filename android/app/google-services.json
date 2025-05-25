@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "748216728873",
+    "project_id": "vynk-24bfd",
+    "storage_bucket": "vynk-24bfd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748216728873:android:a1da76f0cf36f5e7768b38",
+        "android_client_info": {
+          "package_name": "com.example.vertex_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748216728873-off8vaq6hfa4dfor9jedfpb0du88c1ik.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vertex_app",
+            "certificate_hash": "b857d48a5d106f6ab2757d880d927a5b83cf25e3"
+          }
+        },
+        {
+          "client_id": "748216728873-30ob5v17et2qqfln9irtrk51mn8effvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBj0qskWJKWgq_5aYKyu2PK8gANDxgZMDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748216728873-30ob5v17et2qqfln9irtrk51mn8effvj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "748216728873-jbnam0uqel3nlos8gnij1att4sop13k9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vertexApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

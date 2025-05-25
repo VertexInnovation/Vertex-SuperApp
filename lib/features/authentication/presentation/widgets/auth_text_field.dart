@@ -39,7 +39,9 @@ class AuthTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: VertexColors.ceruleanBlue) : null,
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: VertexColors.ceruleanBlue)
+            : null,
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(
           vertical: 16,
@@ -55,7 +57,7 @@ class AuthTextField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: VertexColors.ceruleanBlue,
             width: 2,
           ),
@@ -70,7 +72,7 @@ class AuthTextField extends StatelessWidget {
         ),
         filled: true,
         fillColor: fillColor ?? Colors.grey.shade50,
-        floatingLabelStyle: TextStyle(color: VertexColors.deepSapphire),
+        floatingLabelStyle: const TextStyle(color: VertexColors.deepSapphire),
       ),
     );
   }
