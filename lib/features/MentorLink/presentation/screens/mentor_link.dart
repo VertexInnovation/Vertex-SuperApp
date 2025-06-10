@@ -66,7 +66,7 @@ class _MentorLinkState extends State<MentorLink> {
                       margin: const EdgeInsets.only(right: 18.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: const Color(0xFF263345),
+                        color: const Color(0xFF1a2948),
                       ),
                       child: TextField(
                         controller: _searchController,
@@ -85,7 +85,7 @@ class _MentorLinkState extends State<MentorLink> {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: const Color(0xFF263345),
+                      color: const Color(0xFF1a2948),
                     ),
                     child: IconButton(
                       onPressed: _showFilterDialog,
@@ -116,10 +116,10 @@ class _MentorLinkState extends State<MentorLink> {
                           selectedColor: const Color(0xFFFFC500),
                           labelStyle: TextStyle(
                             color: _selectedFilter == filter
-                                ? const Color(0xFF001232)
+                                ? const Color(0xFF1A1B2D)
                                 : Colors.white,
                           ),
-                          backgroundColor: const Color(0xFF2A3B5A),
+                          backgroundColor: const Color(0xFF2C2E43),
                         ),
                       ),
                   ).toList(),
@@ -170,10 +170,31 @@ class _MentorLinkState extends State<MentorLink> {
 
   Widget _buildMentorCard(Mentor mentor) {
     return Container(
+      margin: EdgeInsets.all(2),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2B4A),
+        color: const Color(0xFF0a1a31),
         borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xFF182841),
+            offset: Offset(
+              1.0,
+              1.0,
+            ),
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+          ),
+          BoxShadow(
+            color: Color(0xFF182841),
+            offset: Offset(
+              - 1.0,
+              - 1.0,
+            ),
+            blurRadius: 1.0,
+            spreadRadius: 1.0,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,29 +301,26 @@ class _MentorLinkState extends State<MentorLink> {
           ),
           const SizedBox(height: 12),
 
-          // Skills Tags - Fix overflow here
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: mentor.skills.map((skill) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A3B5A),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    skill,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
+          // Skills Tags
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: mentor.skills.map((skill) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF213043),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                skill,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
                 ),
-              )).toList(),
-            ),
+              ),
+            )).toList(),
           ),
+
           const SizedBox(height: 16),
 
           // Availability and Action Buttons - Fix the main overflow issue
