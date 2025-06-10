@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:animations/animations.dart';
+
 
 // Models
 class Gig {
@@ -279,13 +278,18 @@ class _GigBoardScreenState extends State<GigBoardScreen>
       elevation: 0,
       title: FadeTransition(
         opacity: _animationController,
-        child: Text(
-          'GigBoard',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          children: [
+            SizedBox(height: 20,),
+            Text(
+              'GigBoard',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
       //
@@ -1056,46 +1060,40 @@ class GigDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Color(0xFF1A2332),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
-        child: Consumer<GigBoardProvider>(
+      bottomNavigationBar: Consumer<GigBoardProvider>(
           builder: (context, gigProvider, child) {
-            return ElevatedButton(
-              onPressed: () {
-                gigProvider.applyForGig(gig.id);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Applied for gig successfully!'),
-                    backgroundColor: Color(0xFF2ECC71),
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  gigProvider.applyForGig(gig.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Applied for gig successfully!'),
+                      backgroundColor: Color(0xFF2ECC71),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFFFC107),
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFFFC107),
-                padding: EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              child: Text(
-                'Apply for this Gig',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                child: Text(
+                  'Apply for this Gig',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             );
           },
         ),
-      ),
+
     );
   }
 }
@@ -1417,66 +1415,60 @@ class _PostGigScreenState extends State<PostGigScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Color(0xFF1A2332),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-        ),
+      bottomNavigationBar:  Padding(
+        padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate() &&
-                _selectedSkills.isNotEmpty) {
-              final newGig = Gig(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                title: _titleController.text,
-                description: _descriptionController.text,
-                budget: int.tryParse(_budgetController.text) ?? 0,
-                deadline: _deadlineController.text,
-                requiredSkills: _selectedSkills,
-                postedBy: 'You',
-                posterUniversity: 'Your University',
-                status: 'Open',
-                createdAt: DateTime.now(),
-              );
+            onPressed: () {
+              if (_formKey.currentState!.validate() &&
+                  _selectedSkills.isNotEmpty) {
+                final newGig = Gig(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  budget: int.tryParse(_budgetController.text) ?? 0,
+                  deadline: _deadlineController.text,
+                  requiredSkills: _selectedSkills,
+                  postedBy: 'You',
+                  posterUniversity: 'Your University',
+                  status: 'Open',
+                  createdAt: DateTime.now(),
+                );
 
-              // Add to provider if available
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Gig posted successfully!'),
-                  backgroundColor: Color(0xFF2ECC71),
-                ),
-              );
-            } else if (_selectedSkills.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Please select at least one skill'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFFFFC107),
-            padding: EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+                // Add to provider if available
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Gig posted successfully!'),
+                    backgroundColor: Color(0xFF2ECC71),
+                  ),
+                );
+              } else if (_selectedSkills.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Please select at least one skill'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFFFC107),
+              padding: EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              'Post Gig',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          child: Text(
-            'Post Gig',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
       ),
+
     );
   }
 
