@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -8,6 +9,7 @@ import 'features/entertainment_hub/vlogs_memes_feed.dart';
 import 'features/entertainment_hub/campus_challenges.dart';
 import 'features/entertainment_hub/events_streaming.dart';
 import 'features/entertainment_hub/music_podcast.dart';
+import 'features/gig_board/gig_board_screen.dart';
 import 'firebase_options.dart';
 
 // Define app color palette as constants
@@ -26,18 +28,15 @@ class VertexColors {
 void main() async {
   // Initialize splash screen settings
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthManager()),
+        ChangeNotifierProvider(create: (_) => GigBoardProvider()),
         // Other providers
       ],
       child: const VertexApp(),
@@ -107,8 +106,10 @@ class VertexApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide:
-                const BorderSide(color: VertexColors.ceruleanBlue, width: 2),
+            borderSide: const BorderSide(
+              color: VertexColors.ceruleanBlue,
+              width: 2,
+            ),
           ),
         ),
 
@@ -166,7 +167,8 @@ class _SplashScreenHandlerState extends State<SplashScreenHandler> {
     return const Scaffold(
       backgroundColor: Colors.white, // Match splash screen color
       body: Center(
-          child: CircularProgressIndicator()), // Temporary loading screen
+        child: CircularProgressIndicator(),
+      ), // Temporary loading screen
     );
   }
 }
@@ -183,10 +185,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _screens = [
     const HomeTab(),
-    const ConnectivityTab(),
-    const ProjectsTab(),
+    const QuickMatchTab(),
+    const GigBoardTab(),
     const EntertainmentTab(),
-    const CareerTab(),
+    const ProfileTab(),
   ];
 
   @override
@@ -211,12 +213,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           PopupMenuButton(
-            icon: const Icon(Icons.person_outline,
-                color: VertexColors.deepSapphire),
+            icon: const Icon(
+              Icons.person_outline,
+              color: VertexColors.deepSapphire,
+            ),
             onSelected: (value) {
               if (value == 'logout') {
-                final authManager =
-                    Provider.of<AuthManager>(context, listen: false);
+                final authManager = Provider.of<AuthManager>(
+                  context,
+                  listen: false,
+                );
                 authManager.signOut();
               }
             },
@@ -225,8 +231,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 value: 'profile',
                 child: Row(
                   children: [
-                    Icon(Icons.account_circle,
-                        color: VertexColors.ceruleanBlue),
+                    Icon(
+                      Icons.account_circle,
+                      color: VertexColors.ceruleanBlue,
+                    ),
                     SizedBox(width: 8),
                     Text('My Profile'),
                   ],
@@ -250,10 +258,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-            ),
+            BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8),
           ],
         ),
         child: BottomNavigationBar(
@@ -297,13 +302,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: VertexColors.ceruleanBlue,
-        child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () {
-          // Add action
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: VertexColors.ceruleanBlue,
+      //   child: const Icon(Icons.add, color: Colors.white),
+      //   onPressed: () {
+      //     print("hello");
+      //   },
+      // ),
     );
   }
 }
@@ -322,19 +327,16 @@ class HomeTab extends StatelessWidget {
           // Welcome Section
           Text(
             'Welcome back, Student!',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
 
           // Activity Feed
           const Text(
             'Your Feed',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
 
@@ -367,10 +369,7 @@ class HomeTab extends StatelessWidget {
           // Quick Access
           const Text(
             'Quick Access',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
 
@@ -381,17 +380,41 @@ class HomeTab extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               _buildQuickAccessItem(
-                  context, 'Find Study Partner', Icons.search, Colors.purple),
+                context,
+                'Find Study Partner',
+                Icons.search,
+                Colors.purple,
+              ),
               _buildQuickAccessItem(
-                  context, 'New Project', Icons.add_box, Colors.blue),
+                context,
+                'New Project',
+                Icons.add_box,
+                Colors.blue,
+              ),
               _buildQuickAccessItem(
-                  context, 'Browse Jobs', Icons.work, Colors.green),
+                context,
+                'Browse Jobs',
+                Icons.work,
+                Colors.green,
+              ),
               _buildQuickAccessItem(
-                  context, 'Events', Icons.event, Colors.orange),
+                context,
+                'Events',
+                Icons.event,
+                Colors.orange,
+              ),
               _buildQuickAccessItem(
-                  context, 'Campus Feed', Icons.school, Colors.red),
+                context,
+                'Campus Feed',
+                Icons.school,
+                Colors.red,
+              ),
               _buildQuickAccessItem(
-                  context, 'My Profile', Icons.person, Colors.indigo),
+                context,
+                'My Profile',
+                Icons.person,
+                Colors.indigo,
+              ),
             ],
           ),
         ],
@@ -424,7 +447,11 @@ class HomeTab extends StatelessWidget {
   }
 
   Widget _buildQuickAccessItem(
-      BuildContext context, String label, IconData icon, Color color) {
+    BuildContext context,
+    String label,
+    IconData icon,
+    Color color,
+  ) {
     return InkWell(
       onTap: () {
         // TODO: Navigate to feature
@@ -450,8 +477,8 @@ class HomeTab extends StatelessWidget {
 }
 
 // Placeholder tabs for other sections
-class ConnectivityTab extends StatelessWidget {
-  const ConnectivityTab({super.key});
+class QuickMatchTab extends StatelessWidget {
+  const QuickMatchTab({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -459,12 +486,12 @@ class ConnectivityTab extends StatelessWidget {
   }
 }
 
-class ProjectsTab extends StatelessWidget {
-  const ProjectsTab({super.key});
+class GigBoardTab extends StatelessWidget {
+  const GigBoardTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Projects Hub Coming Soon'));
+    return GigBoardScreen();
   }
 }
 
@@ -510,9 +537,9 @@ class _EntertainmentTabState extends State<EntertainmentTab>
                 const SizedBox(height: 4),
                 Text(
                   "Discover fun and relaxation in your campus community",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 16),
 
@@ -593,10 +620,7 @@ class _EntertainmentTabState extends State<EntertainmentTab>
             children: [
               const Text(
                 "Create New Content",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               _buildCreationOption(
@@ -676,10 +700,7 @@ class TrendingTab extends StatelessWidget {
         // AI-generated content section
         const Text(
           "AI-Generated Just For You",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
 
@@ -716,10 +737,7 @@ class TrendingTab extends StatelessWidget {
         // Trending content
         const Text(
           "Trending on Campus",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
 
@@ -770,9 +788,7 @@ class TrendingTab extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(right: 16, bottom: 4),
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: SizedBox(
         width: 180,
         child: Stack(
@@ -814,10 +830,7 @@ class TrendingTab extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.8),
-                      Colors.transparent,
-                    ],
+                    colors: [Colors.black.withOpacity(0.8), Colors.transparent],
                   ),
                 ),
                 child: Text(
@@ -848,9 +861,7 @@ class TrendingTab extends StatelessWidget {
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -867,8 +878,9 @@ class TrendingTab extends StatelessWidget {
             subtitle: Text(timeAgo),
             trailing: Chip(
               label: Text(contentType),
-              backgroundColor:
-                  _getColorForContentType(contentType).withOpacity(0.2),
+              backgroundColor: _getColorForContentType(
+                contentType,
+              ).withOpacity(0.2),
               labelStyle: TextStyle(
                 color: _getColorForContentType(contentType),
                 fontSize: 12,
@@ -882,10 +894,7 @@ class TrendingTab extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
 
@@ -920,10 +929,7 @@ class TrendingTab extends StatelessWidget {
                 ),
                 Text('$comments'),
                 const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {},
-                ),
+                IconButton(icon: const Icon(Icons.share), onPressed: () {}),
                 IconButton(
                   icon: const Icon(Icons.bookmark_border),
                   onPressed: () {},
@@ -954,8 +960,8 @@ class TrendingTab extends StatelessWidget {
   }
 }
 
-class CareerTab extends StatelessWidget {
-  const CareerTab({super.key});
+class ProfileTab extends StatelessWidget {
+  const ProfileTab({super.key});
 
   @override
   Widget build(BuildContext context) {
