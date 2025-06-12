@@ -3,6 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
+import 'package:vertex_app/features/MentorLink/presentation/screens/mentor_link.dart';
+import 'package:vertex_app/screens/quick_match_tab.dart';
+import 'features/MentorLink/model/Mentor_model.dart';
 import 'features/authentication/auth_manager.dart';
 import 'features/authentication/presentation/signin_page.dart';
 import 'features/entertainment_hub/vlogs_memes_feed.dart';
@@ -37,6 +40,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthManager()),
         ChangeNotifierProvider(create: (_) => GigBoardProvider()),
+        ChangeNotifierProvider(create: (_) => MentorLinkProvider()),
         // Other providers
       ],
       child: const VertexApp(),
@@ -187,17 +191,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const HomeTab(),
     const QuickMatchTab(),
     const GigBoardTab(),
-    const EntertainmentTab(),
+    const MentorLink(),
     const ProfileTab(),
+  ];
+
+  final List<String> _AppBarText = [
+    "Home",
+    "Qucik Match",
+    "Gig Board",
+    "Mentor Link",
+    "Profile"
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Vertex',
-          style: TextStyle(
+        title:  Text(
+          _AppBarText[_currentIndex],
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: VertexColors.deepSapphire,
           ),
@@ -269,9 +281,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             });
           },
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          selectedItemColor: VertexColors.deepSapphire,
-          unselectedItemColor: Colors.grey,
+          backgroundColor: Color(0xFF001232),
+          selectedItemColor: Color(0xFFFFC500),
+          unselectedItemColor: Colors.white,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
           items: const [
             BottomNavigationBarItem(
@@ -282,22 +294,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.people_outline),
               activeIcon: Icon(Icons.people),
-              label: 'Connect',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.folder_outlined),
-              activeIcon: Icon(Icons.folder),
-              label: 'Projects',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie_outlined),
-              activeIcon: Icon(Icons.movie),
-              label: 'Entertain',
+              label: 'QuickMatch', // Changed from 'Connect'
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work_outline),
               activeIcon: Icon(Icons.work),
-              label: 'Career',
+              label: 'GigBoard', // Changed from 'Projects'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.school_outlined),
+              activeIcon: Icon(Icons.school),
+              label: 'MentorLink', // Changed from 'Entertainment'
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile', // Changed from 'Career'
             ),
           ],
         ),
@@ -477,14 +489,14 @@ class HomeTab extends StatelessWidget {
 }
 
 // Placeholder tabs for other sections
-class QuickMatchTab extends StatelessWidget {
-  const QuickMatchTab({super.key});
+// class QuickMatchTab extends StatelessWidget {
+//   const QuickMatchTab({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Connectivity Hub Coming Soon'));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Center(child: Text('Connectivity Hub Coming Soon'));
+//   }
+// }
 
 class GigBoardTab extends StatelessWidget {
   const GigBoardTab({super.key});
