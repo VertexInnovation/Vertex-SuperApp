@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:vertex_app/features/MentorLink/presentation/screens/mentor_link.dart';
+import 'package:vertex_app/screens/quick_match_tab.dart';
 import 'features/MentorLink/model/Mentor_model.dart';
 import 'features/authentication/auth_manager.dart';
 import 'features/authentication/presentation/signin_page.dart';
@@ -194,13 +195,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const ProfileTab(),
   ];
 
+  final List<String> _AppBarText = [
+    "Home",
+    "Qucik Match",
+    "Gig Board",
+    "Mentor Link",
+    "Profile"
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Vertex',
-          style: TextStyle(
+        title:  Text(
+          _AppBarText[_currentIndex],
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: VertexColors.deepSapphire,
           ),
@@ -480,14 +489,14 @@ class HomeTab extends StatelessWidget {
 }
 
 // Placeholder tabs for other sections
-class QuickMatchTab extends StatelessWidget {
-  const QuickMatchTab({super.key});
+// class QuickMatchTab extends StatelessWidget {
+//   const QuickMatchTab({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Connectivity Hub Coming Soon'));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Center(child: Text('Connectivity Hub Coming Soon'));
+//   }
+// }
 
 class GigBoardTab extends StatelessWidget {
   const GigBoardTab({super.key});
