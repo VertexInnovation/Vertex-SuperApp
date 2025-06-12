@@ -13,13 +13,13 @@ class QuickMatchTab extends StatefulWidget {
 
 class _QuickMatchTabState extends State<QuickMatchTab> {
   late List<QuickMatchModel> quickMatchListValue;
-  // final int _counter = 0;
+  final int _counter = 0;
   late CardController controller;
-   bool isDeckEmpty = false;
+  bool isDeckEmpty = false;
   @override
   void initState() {
     super.initState();
-    controller = CardController(); // Initialize it here
+    controller = CardController();
     quickMatchListValue = quickMatchList;
   }
 
@@ -36,31 +36,150 @@ class _QuickMatchTabState extends State<QuickMatchTab> {
           backgroundColor: const Color(0xFF011332),
           automaticallyImplyLeading: false,
         ),
-        body: Center(
-            child: isDeckEmpty
-            ? const Text(
-                'No more cards!',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+        body: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.width * 0.2,
+            ),
+            if (isDeckEmpty)
+              Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    height: MediaQuery.of(context).size.width * 0.2,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.white.withOpacity(0.3), width: 2),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "No more matches!",
+                      style: TextStyle(color: Colors.white, fontSize: 24),
+                    ),
+                  ),
+                ],
               )
-            : TinderSwapCard(
-                orientation: AmassOrientation.bottom,
-                totalNum: quickMatchListValue.length,
-                stackNum: 2,
-                swipeEdge: 4,
-                cardBuilder: (context, index) {
-                  return QuickMatchWidget(quickMatch: quickMatchListValue[index]);
-                },
-                cardController: controller,
-                swipeUpdateCallback: (DragUpdateDetails details, Alignment align) {
-                  // Optional: you can add left/right swipe animations
-                },
-                swipeCompleteCallback: (CardSwipeOrientation orientation, int index) {
-                  if (index == quickMatchListValue.length - 1) {
-                    setState(() {
-                      isDeckEmpty = true;
-                    });
-                  }
-                },
-              ),)); //QuickMatchWidget(quickMatch: quickMatchListValue[_counter])
+            else
+              Expanded(
+                // <--- ADD THIS WRAPPER
+                child: TinderSwapCard(
+                  swipeUp: false,
+                  swipeDown: false,
+                  orientation: AmassOrientation.bottom,
+                  totalNum: quickMatchListValue.length,
+                  stackNum: 2,
+                  swipeEdge: 4.0,
+                  maxWidth: MediaQuery.of(context).size.width * 0.95,
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  minWidth: MediaQuery.of(context).size.width * 0.85,
+                  minHeight: MediaQuery.of(context).size.height * 0.5,
+                  cardBuilder: (context, index) => Align(
+                    alignment: Alignment.topCenter,
+                    child: QuickMatchWidget(
+                      quickMatch: quickMatchListValue[index],
+                    ),
+                  ),
+                  cardController: controller,
+                  swipeCompleteCallback:
+                      (CardSwipeOrientation orientation, int index) {
+                    if (orientation == CardSwipeOrientation.left) {
+                      lightLeftBorderRed(context);
+                    } else if (orientation == CardSwipeOrientation.right) {
+                      lightRightBorderGreen(context);
+                      // add to the array if needed
+                    }
+                    if (index == quickMatchListValue.length - 1) {
+                      setState(() {
+                        isDeckEmpty = true;
+                      });
+                    }
+                  },
+                ),
+              ),
+            // const Spacer(),
+            Padding(
+              padding:
+                  const EdgeInsets.only(bottom: 8.0, left: 70.0, right: 70.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 110,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 255, 255, 255)
+                            .withOpacity(0.15),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Pass",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 110,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Color.fromARGB(255, 255, 255, 255)
+                            .withOpacity(0.15),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Connect",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
+}
+
+void lightRightBorderGreen(BuildContext context) async {
+  final overlay = Overlay.of(context);
+  final overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: 0,
+      right: 0,
+      bottom: 0,
+      width: 10,
+      child: IgnorePointer(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          color: Colors.green.withOpacity(0.7),
+        ),
+      ),
+    ),
+  );
+
+  overlay.insert(overlayEntry);
+  await Future.delayed(const Duration(milliseconds: 500));
+  overlayEntry.remove();
+}
+
+void lightLeftBorderRed(BuildContext context) async {
+  final overlay = Overlay.of(context);
+  final overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: 0,
+      left: 0,
+      bottom: 0,
+      width: 10,
+      child: IgnorePointer(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          color: Colors.red.withOpacity(0.7),
+        ),
+      ),
+    ),
+  );
+
+  overlay.insert(overlayEntry);
+  await Future.delayed(const Duration(milliseconds: 500));
+  overlayEntry.remove();
 }

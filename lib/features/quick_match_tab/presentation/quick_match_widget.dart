@@ -14,19 +14,20 @@ class QuickMatchWidget extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     // final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(35, 10, 35, 0),
+      padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
       child: Container(
         decoration: BoxDecoration(
+            color: const Color(0xFF0A1B31),
             border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
-            constraints: BoxConstraints(minHeight: screenHeight*0.2),
+        constraints: BoxConstraints(minHeight: screenHeight * 0.2),
         // height: screenHeight * 0.25,
         // width: screenWidth*0.01,
 
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
-             mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
@@ -37,6 +38,10 @@ class QuickMatchWidget extends StatelessWidget {
                         quickMatch.imageLink,
                         width: 45,
                         height: 45,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.error,
+                              size: 45, color: Colors.red);
+                        },
                         // fit: BoxFit.cover,
                       ),
                     ),
