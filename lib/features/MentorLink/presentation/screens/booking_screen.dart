@@ -209,7 +209,7 @@ class _MentorBookingScreenState extends State<MentorBookingScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2A3B5A),
+                      color: const Color(0xFF213043),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -246,7 +246,7 @@ class _MentorBookingScreenState extends State<MentorBookingScreen> {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 50,
+              height: 45,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: availableDates.length,
@@ -276,7 +276,7 @@ class _MentorBookingScreenState extends State<MentorBookingScreen> {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              height: 50,
+              height: 45,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: availableTimes.length,
