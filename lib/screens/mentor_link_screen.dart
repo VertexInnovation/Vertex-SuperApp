@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../model/Mentor_model.dart';
-import 'booking_screen.dart';
-import 'chat_screen.dart';
+import '../features/MentorLink/model/Mentor_model.dart';
+import '../features/MentorLink/presentation/screens/booking_screen.dart';
+import '../features/MentorLink/presentation/screens/chat_screen.dart';
 
 class MentorLink extends StatefulWidget {
   const MentorLink({super.key});
@@ -89,7 +89,8 @@ class _MentorLinkState extends State<MentorLink> {
                     ),
                     child: IconButton(
                       onPressed: _showFilterDialog,
-                      icon: const Icon(Icons.filter_alt_outlined, color: Colors.white),
+                      icon: const Icon(Icons.filter_alt_outlined,
+                          color: Colors.white),
                     ),
                   ),
                 ],
@@ -101,31 +102,37 @@ class _MentorLinkState extends State<MentorLink> {
                 height: 40,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: ['All', 'Available', 'Weekday', 'Weekend'].map((filter) =>
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(filter),
-                          selected: _selectedFilter == filter,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedFilter = filter;
-                            });
-                            context.read<MentorLinkProvider>().filterByAvailability(filter);
-                          },
-                          selectedColor: const Color(0xFFFFC500),
-                          labelStyle: TextStyle(
-                            color: _selectedFilter == filter
-                                ? const Color(0xFF1A1B2D)
-                                : Colors.white,
+                  children: ['All', 'Available', 'Weekday', 'Weekend']
+                      .map(
+                        (filter) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(filter),
+                            selected: _selectedFilter == filter,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedFilter = filter;
+                              });
+                              context
+                                  .read<MentorLinkProvider>()
+                                  .filterByAvailability(filter);
+                            },
+                            selectedColor: const Color(0xFFFFC500),
+                            labelStyle: TextStyle(
+                              color: _selectedFilter == filter
+                                  ? const Color(0xFF1A1B2D)
+                                  : Colors.white,
+                            ),
+                            backgroundColor: const Color(0xFF2C2E43),
                           ),
-                          backgroundColor: const Color(0xFF2C2E43),
                         ),
-                      ),
-                  ).toList(),
+                      )
+                      .toList(),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               // Mentors List
               Expanded(
                 child: Consumer<MentorLinkProvider>(
@@ -188,8 +195,8 @@ class _MentorLinkState extends State<MentorLink> {
           BoxShadow(
             color: Color(0xFF182841),
             offset: Offset(
-              - 1.0,
-              - 1.0,
+              -1.0,
+              -1.0,
             ),
             blurRadius: 1.0,
             spreadRadius: 1.0,
@@ -225,20 +232,23 @@ class _MentorLinkState extends State<MentorLink> {
                         decoration: BoxDecoration(
                           color: Colors.green,
                           shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFF1A2B4A), width: 2),
+                          border: Border.all(
+                              color: const Color(0xFF1A2B4A), width: 2),
                         ),
                       ),
                     ),
                 ],
               ),
               const SizedBox(width: 12),
-              Expanded( // Wrap in Expanded to prevent overflow
+              Expanded(
+                // Wrap in Expanded to prevent overflow
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Flexible( // Make name flexible
+                        Flexible(
+                          // Make name flexible
                           child: Text(
                             mentor.name,
                             style: const TextStyle(
@@ -305,26 +315,30 @@ class _MentorLinkState extends State<MentorLink> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: mentor.skills.map((skill) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFF213043),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                skill,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-              ),
-            )).toList(),
+            children: mentor.skills
+                .map((skill) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF213043),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        skill,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ))
+                .toList(),
           ),
 
           const SizedBox(height: 16),
 
           // Availability and Action Buttons - Fix the main overflow issue
-          Column( // Change from Row to Column for better layout
+          Column(
+            // Change from Row to Column for better layout
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -335,7 +349,8 @@ class _MentorLinkState extends State<MentorLink> {
                     size: 16,
                   ),
                   const SizedBox(width: 4),
-                  Flexible( // Make availability text flexible
+                  Flexible(
+                    // Make availability text flexible
                     child: Text(
                       'Available: ${mentor.availability}',
                       style: TextStyle(
@@ -387,13 +402,13 @@ class _MentorLinkState extends State<MentorLink> {
     );
   }
 
-
   void _showFilterDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A2B4A),
-        title: const Text('Filter Mentors', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Filter Mentors', style: TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -489,4 +504,3 @@ class _MentorLinkState extends State<MentorLink> {
     );
   }
 }
-

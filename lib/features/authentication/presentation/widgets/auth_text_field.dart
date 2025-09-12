@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vertex_app/colors.dart';
 import '../../../../main.dart'; // Import for VertexColors
 
 class AuthTextField extends StatelessWidget {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vertex_app/colors.dart';
 import 'package:vertex_app/features/authentication/presentation/screens/forgot_password.dart';
 import '../auth_manager.dart';
 import 'signup_page.dart';

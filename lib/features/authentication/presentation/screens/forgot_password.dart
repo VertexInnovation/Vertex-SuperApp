@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vertex_app/colors.dart';
 import 'package:vertex_app/features/authentication/presentation/screens/password_reset.dart';
 
 import '../../../../main.dart';

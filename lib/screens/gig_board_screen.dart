@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 // Models
 class Gig {
   final String id;
@@ -79,7 +78,7 @@ class GigBoardProvider extends ChangeNotifier {
       postedBy: 'Alex Chen',
       posterUniversity: 'MIT',
       status: 'Open',
-      createdAt: DateTime.now().subtract(Duration(hours: 2)),
+      createdAt: DateTime.now().subtract(const Duration(hours: 2)),
     ),
     Gig(
       id: '2',
@@ -92,7 +91,7 @@ class GigBoardProvider extends ChangeNotifier {
       postedBy: 'Sophia Lee',
       posterUniversity: 'MIT',
       status: 'Open',
-      createdAt: DateTime.now().subtract(Duration(hours: 5)),
+      createdAt: DateTime.now().subtract(const Duration(hours: 5)),
     ),
     Gig(
       id: '3',
@@ -105,7 +104,7 @@ class GigBoardProvider extends ChangeNotifier {
       postedBy: 'Mike Johnson',
       posterUniversity: 'Stanford',
       status: 'Open',
-      createdAt: DateTime.now().subtract(Duration(days: 1)),
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
     ),
   ];
 
@@ -217,6 +216,7 @@ class GigBoardProvider extends ChangeNotifier {
 
 // Main GigBoard Screen
 class GigBoardScreen extends StatefulWidget {
+  const GigBoardScreen({super.key});
   @override
   _GigBoardScreenState createState() => _GigBoardScreenState();
 }
@@ -231,7 +231,7 @@ class _GigBoardScreenState extends State<GigBoardScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
     _animationController.forward();
@@ -249,14 +249,14 @@ class _GigBoardScreenState extends State<GigBoardScreen>
     return ChangeNotifierProvider(
       create: (_) => GigBoardProvider(),
       child: Scaffold(
-        backgroundColor: Color(0xFF0A1628),
+        backgroundColor: const Color(0xFF0A1628),
         appBar: _buildAppBar(),
         body: Consumer<GigBoardProvider>(
           builder: (context, gigProvider, child) {
             return RefreshIndicator(
               onRefresh: gigProvider.refreshGigs,
-              backgroundColor: Color(0xFF1A2332),
-              color: Color(0xFFFFC107),
+              backgroundColor: const Color(0xFF1A2332),
+              color: const Color(0xFFFFC107),
               child: Column(
                 children: [
                   _buildSearchAndFilter(gigProvider),
@@ -274,13 +274,15 @@ class _GigBoardScreenState extends State<GigBoardScreen>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: Color(0xFF0A1628),
+      backgroundColor: const Color(0xFF0A1628),
       elevation: 0,
       title: FadeTransition(
         opacity: _animationController,
-        child: Column(
+        child: const Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Text(
               'GigBoard',
               style: TextStyle(
@@ -298,19 +300,19 @@ class _GigBoardScreenState extends State<GigBoardScreen>
 
   Widget _buildSearchAndFilter(GigBoardProvider gigProvider) {
     return Container(
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       child: Row(
         children: [
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFF1A2332),
+                color: const Color(0xFF1A2332),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -318,7 +320,7 @@ class _GigBoardScreenState extends State<GigBoardScreen>
                 controller: _searchController,
                 onChanged: gigProvider.setSearchQuery,
                 style:
-                    TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
+                    const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 decoration: InputDecoration(
                     hintText: 'Search gigs...',
                     hintStyle: TextStyle(color: Colors.grey[400]),
@@ -333,17 +335,19 @@ class _GigBoardScreenState extends State<GigBoardScreen>
                           )
                         : null,
                     border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     filled: true,
                     fillColor: const Color(0xFF0A1628)),
               ),
             ),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Container(
             decoration: BoxDecoration(
-              color: _showFilters ? Color(0xFFFFC107) : Color(0xFF1A2332),
+              color: _showFilters
+                  ? const Color(0xFFFFC107)
+                  : const Color(0xFF1A2332),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -365,11 +369,11 @@ class _GigBoardScreenState extends State<GigBoardScreen>
 
   Widget _buildSkillFilters(GigBoardProvider gigProvider) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 5),
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 5),
       decoration: BoxDecoration(
-        color: Color(0xFF1A2332),
+        color: const Color(0xFF1A2332),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -378,7 +382,7 @@ class _GigBoardScreenState extends State<GigBoardScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 'Filter by skills',
                 style: TextStyle(
                   color: Colors.white,
@@ -388,17 +392,17 @@ class _GigBoardScreenState extends State<GigBoardScreen>
               ),
               TextButton(
                 onPressed: gigProvider.clearSkillFilters,
-                child: Text(
+                child: const Text(
                   'Clear',
                   style: TextStyle(color: Color(0xFFFFC107)),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 3),
+          const SizedBox(height: 3),
           // Add scrollable container for skills
           ConstrainedBox(
-            constraints: BoxConstraints(
+            constraints: const BoxConstraints(
               maxHeight: 90, // Limit the height to make it scrollable
             ),
             child: SingleChildScrollView(
@@ -410,15 +414,16 @@ class _GigBoardScreenState extends State<GigBoardScreen>
                   return GestureDetector(
                     onTap: () => gigProvider.toggleSkillFilter(skill),
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color:
-                            isSelected ? Color(0xFFFFC107) : Color(0xFF2A3441),
+                        color: isSelected
+                            ? const Color(0xFFFFC107)
+                            : const Color(0xFF2A3441),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: isSelected
-                              ? Color(0xFFFFC107)
+                              ? const Color(0xFFFFC107)
                               : Colors.grey[700]!,
                           width: 1,
                         ),
@@ -461,7 +466,7 @@ class _GigBoardScreenState extends State<GigBoardScreen>
                 size: 64,
                 color: Colors.grey[400],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'No gigs found',
                 style: TextStyle(
@@ -470,7 +475,7 @@ class _GigBoardScreenState extends State<GigBoardScreen>
                 ),
               ),
               if (gigProvider.selectedSkills.isNotEmpty) ...[
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Try adjusting your filters',
                   style: TextStyle(
@@ -487,12 +492,12 @@ class _GigBoardScreenState extends State<GigBoardScreen>
 
     return Expanded(
       child: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: gigs.length,
         itemBuilder: (context, index) {
           return SlideTransition(
             position: Tween<Offset>(
-              begin: Offset(1, 0),
+              begin: const Offset(1, 0),
               end: Offset.zero,
             ).animate(CurvedAnimation(
               parent: _animationController,
@@ -514,18 +519,18 @@ class _GigBoardScreenState extends State<GigBoardScreen>
 
   Widget _buildShimmerLoading() {
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: 5,
       itemBuilder: (context, index) {
         return Container(
-          margin: EdgeInsets.only(bottom: 16),
+          margin: const EdgeInsets.only(bottom: 16),
           child: Shimmer.fromColors(
-            baseColor: Color(0xFF1A2332),
-            highlightColor: Color(0xFF2A3441),
+            baseColor: const Color(0xFF1A2332),
+            highlightColor: const Color(0xFF2A3441),
             child: Container(
               height: 200,
               decoration: BoxDecoration(
-                color: Color(0xFF1A2332),
+                color: const Color(0xFF1A2332),
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
@@ -538,18 +543,18 @@ class _GigBoardScreenState extends State<GigBoardScreen>
   Widget _buildFloatingActionButton() {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFFFC107),
+        color: const Color(0xFFFFC107),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Color(0xFFFFC107).withOpacity(0.3),
+            color: const Color(0xFFFFC107).withOpacity(0.3),
             blurRadius: 15,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: IconButton(
-        icon: Icon(Icons.add, color: Colors.black, size: 28),
+        icon: const Icon(Icons.add, color: Colors.black, size: 28),
         onPressed: () => _showPostGigScreen(),
       ),
     );
@@ -584,35 +589,35 @@ class GigCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: Color(0xFF1A2332),
+            color: const Color(0xFF1A2332),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.grey[800]!, width: 0.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 8,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildDescription(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildBudgetAndDeadline(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildSkills(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildPosterInfo(),
               ],
             ),
@@ -629,7 +634,7 @@ class GigCard extends StatelessWidget {
         Expanded(
           child: Text(
             gig.title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -637,14 +642,14 @@ class GigCard extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: _getStatusColor(),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             gig.status,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
@@ -671,18 +676,18 @@ class GigCard extends StatelessWidget {
   Widget _buildBudgetAndDeadline() {
     return Row(
       children: [
-        Icon(Icons.attach_money, color: Color(0xFFFFC107), size: 20),
+        const Icon(Icons.attach_money, color: Color(0xFFFFC107), size: 20),
         Text(
           '\$${gig.budget}',
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFFFFC107),
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Icon(Icons.access_time, color: Colors.grey[400], size: 20),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           gig.deadline,
           style: TextStyle(
@@ -690,7 +695,7 @@ class GigCard extends StatelessWidget {
             fontSize: 14,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           timeago.format(gig.createdAt),
           style: TextStyle(
@@ -708,9 +713,10 @@ class GigCard extends StatelessWidget {
       runSpacing: 8,
       children: gig.requiredSkills
           .map((skill) => Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Color(0xFF2A3441),
+                  color: const Color(0xFF2A3441),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.grey[700]!, width: 0.5),
                 ),
@@ -731,17 +737,17 @@ class GigCard extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 16,
-          backgroundColor: Color(0xFFFFC107),
+          backgroundColor: const Color(0xFFFFC107),
           child: Text(
             gig.postedBy[0].toUpperCase(),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
           ),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -754,7 +760,7 @@ class GigCard extends StatelessWidget {
             ),
             Text(
               gig.postedBy,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -769,13 +775,13 @@ class GigCard extends StatelessWidget {
   Color _getStatusColor() {
     switch (gig.status.toLowerCase()) {
       case 'open':
-        return Color(0xFF2ECC71);
+        return const Color(0xFF2ECC71);
       case 'in progress':
-        return Color(0xFFF39C12);
+        return const Color(0xFFF39C12);
       case 'completed':
-        return Color(0xFF3498DB);
+        return const Color(0xFF3498DB);
       default:
-        return Color(0xFF95A5A6);
+        return const Color(0xFF95A5A6);
     }
   }
 }
@@ -789,21 +795,21 @@ class GigDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0A1628),
+      backgroundColor: const Color(0xFF0A1628),
       appBar: AppBar(
-        backgroundColor: Color(0xFF0A1628),
+        backgroundColor: const Color(0xFF0A1628),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
+        title: const Text(
           'Gig Details',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.share, color: Colors.white),
+            icon: const Icon(Icons.share, color: Colors.white),
             onPressed: () {
               // Share functionality
             },
@@ -813,7 +819,8 @@ class GigDetailsScreen extends StatelessWidget {
               return IconButton(
                 icon: Icon(
                   gig.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                  color: gig.isBookmarked ? Color(0xFFFFC107) : Colors.white,
+                  color:
+                      gig.isBookmarked ? const Color(0xFFFFC107) : Colors.white,
                 ),
                 onPressed: () => gigProvider.toggleBookmark(gig.id),
               );
@@ -822,7 +829,7 @@ class GigDetailsScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -833,7 +840,7 @@ class GigDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: Text(
                     gig.title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -841,14 +848,15 @@ class GigDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Color(0xFF2ECC71),
+                    color: const Color(0xFF2ECC71),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     gig.status,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -858,26 +866,26 @@ class GigDetailsScreen extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Budget and Deadline Cards
             Row(
               children: [
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Color(0xFF1A2332),
+                      color: const Color(0xFF1A2332),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       children: [
-                        Icon(Icons.attach_money,
+                        const Icon(Icons.attach_money,
                             color: Color(0xFFFFC107), size: 32),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           '\$${gig.budget}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFFFFC107),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -894,22 +902,22 @@ class GigDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Color(0xFF1A2332),
+                      color: const Color(0xFF1A2332),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       children: [
                         Icon(Icons.access_time,
                             color: Colors.grey[400], size: 32),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           gig.deadline,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -929,10 +937,10 @@ class GigDetailsScreen extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Description Section
-            Text(
+            const Text(
               'Description',
               style: TextStyle(
                 color: Colors.white,
@@ -940,7 +948,7 @@ class GigDetailsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               gig.description,
               style: TextStyle(
@@ -950,10 +958,10 @@ class GigDetailsScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Required Skills Section
-            Text(
+            const Text(
               'Required Skills',
               style: TextStyle(
                 color: Colors.white,
@@ -961,16 +969,16 @@ class GigDetailsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: gig.requiredSkills
                   .map((skill) => Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Color(0xFF2A3441),
+                          color: const Color(0xFF2A3441),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -984,10 +992,10 @@ class GigDetailsScreen extends StatelessWidget {
                   .toList(),
             ),
 
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Posted By Section
-            Text(
+            const Text(
               'Posted By',
               style: TextStyle(
                 color: Colors.white,
@@ -995,35 +1003,35 @@ class GigDetailsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Color(0xFF1A2332),
+                color: const Color(0xFF1A2332),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
                     radius: 24,
-                    backgroundColor: Color(0xFFFFC107),
+                    backgroundColor: const Color(0xFFFFC107),
                     child: Text(
                       gig.postedBy[0].toUpperCase(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           gig.postedBy,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -1040,12 +1048,13 @@ class GigDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Color(0xFFFFC107),
+                      color: const Color(0xFFFFC107),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Contact',
                       style: TextStyle(
                         color: Colors.black,
@@ -1061,45 +1070,46 @@ class GigDetailsScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Consumer<GigBoardProvider>(
-          builder: (context, gigProvider, child) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  gigProvider.applyForGig(gig.id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Applied for gig successfully!'),
-                      backgroundColor: Color(0xFF2ECC71),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFFFC107),
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+        builder: (context, gigProvider, child) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                gigProvider.applyForGig(gig.id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Applied for gig successfully!'),
+                    backgroundColor: Color(0xFF2ECC71),
                   ),
-                ),
-                child: Text(
-                  'Apply for this Gig',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFFC107),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
-            );
-          },
-        ),
-
+              child: const Text(
+                'Apply for this Gig',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
 // Post Gig Screen
 class PostGigScreen extends StatefulWidget {
+  const PostGigScreen({super.key});
+
   @override
   _PostGigScreenState createState() => _PostGigScreenState();
 }
@@ -1131,21 +1141,21 @@ class _PostGigScreenState extends State<PostGigScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF0A1628),
+      backgroundColor: const Color(0xFF0A1628),
       appBar: AppBar(
-        backgroundColor: Color(0xFF0A1628),
+        backgroundColor: const Color(0xFF0A1628),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
+        title: const Text(
           'Post a Gig',
           style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.share, color: Colors.white),
+            icon: const Icon(Icons.share, color: Colors.white),
             onPressed: () {
               // Share functionality
             },
@@ -1153,13 +1163,13 @@ class _PostGigScreenState extends State<PostGigScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Post a New Gig',
                 style: TextStyle(
                   color: Colors.white,
@@ -1167,7 +1177,7 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Find the perfect collaborator for your project',
                 style: TextStyle(
@@ -1175,10 +1185,10 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
 
               // Gig Title
-              Text(
+              const Text(
                 'Gig Title',
                 style: TextStyle(
                   color: Colors.white,
@@ -1186,22 +1196,23 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _titleController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Enter a clear, descriptive title',
                   hintStyle: TextStyle(color: Colors.grey[500]),
                   filled: true,
-                  fillColor: Color(0xFF1A2332),
+                  fillColor: const Color(0xFF1A2332),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Color(0xFFFFC107), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFFFFC107), width: 2),
                   ),
                 ),
                 validator: (value) {
@@ -1212,10 +1223,10 @@ class _PostGigScreenState extends State<PostGigScreen> {
                 },
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Description
-              Text(
+              const Text(
                 'Description',
                 style: TextStyle(
                   color: Colors.white,
@@ -1223,24 +1234,25 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               TextFormField(
                 controller: _descriptionController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText:
                       'Describe the project, requirements, and expectations',
                   hintStyle: TextStyle(color: Colors.grey[500]),
                   filled: true,
-                  fillColor: Color(0xFF1A2332),
+                  fillColor: const Color(0xFF1A2332),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Color(0xFFFFC107), width: 2),
+                    borderSide:
+                        const BorderSide(color: Color(0xFFFFC107), width: 2),
                   ),
                 ),
                 validator: (value) {
@@ -1251,7 +1263,7 @@ class _PostGigScreenState extends State<PostGigScreen> {
                 },
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Budget and Deadline Row
               Row(
@@ -1260,7 +1272,7 @@ class _PostGigScreenState extends State<PostGigScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Budget',
                           style: TextStyle(
                             color: Colors.white,
@@ -1268,25 +1280,26 @@ class _PostGigScreenState extends State<PostGigScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextFormField(
                           controller: _budgetController,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: 'Amount',
                             hintStyle: TextStyle(color: Colors.grey[500]),
                             prefixText: '\$ ',
-                            prefixStyle: TextStyle(color: Color(0xFFFFC107)),
+                            prefixStyle:
+                                const TextStyle(color: Color(0xFFFFC107)),
                             filled: true,
-                            fillColor: Color(0xFF1A2332),
+                            fillColor: const Color(0xFF1A2332),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color(0xFFFFC107), width: 2),
                             ),
                           ),
@@ -1300,12 +1313,12 @@ class _PostGigScreenState extends State<PostGigScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Deadline',
                           style: TextStyle(
                             color: Colors.white,
@@ -1313,24 +1326,24 @@ class _PostGigScreenState extends State<PostGigScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         TextFormField(
                           controller: _deadlineController,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'e.g. 2 weeks',
                             hintStyle: TextStyle(color: Colors.grey[500]),
                             prefixIcon: Icon(Icons.access_time,
                                 color: Colors.grey[500]),
                             filled: true,
-                            fillColor: Color(0xFF1A2332),
+                            fillColor: const Color(0xFF1A2332),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color(0xFFFFC107), width: 2),
                             ),
                           ),
@@ -1347,10 +1360,10 @@ class _PostGigScreenState extends State<PostGigScreen> {
                 ],
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Required Skills
-              Text(
+              const Text(
                 'Required Skills',
                 style: TextStyle(
                   color: Colors.white,
@@ -1358,7 +1371,7 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Select up to 5 skills',
                 style: TextStyle(
@@ -1366,7 +1379,7 @@ class _PostGigScreenState extends State<PostGigScreen> {
                   fontSize: 14,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -1383,15 +1396,16 @@ class _PostGigScreenState extends State<PostGigScreen> {
                       });
                     },
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color:
-                            isSelected ? Color(0xFFFFC107) : Color(0xFF2A3441),
+                        color: isSelected
+                            ? const Color(0xFFFFC107)
+                            : const Color(0xFF2A3441),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: isSelected
-                              ? Color(0xFFFFC107)
+                              ? const Color(0xFFFFC107)
                               : Colors.grey[700]!,
                           width: 1,
                         ),
@@ -1410,65 +1424,64 @@ class _PostGigScreenState extends State<PostGigScreen> {
                 }).toList(),
               ),
 
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
             ],
           ),
         ),
       ),
-      bottomNavigationBar:  Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate() &&
-                  _selectedSkills.isNotEmpty) {
-                final newGig = Gig(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(),
-                  title: _titleController.text,
-                  description: _descriptionController.text,
-                  budget: int.tryParse(_budgetController.text) ?? 0,
-                  deadline: _deadlineController.text,
-                  requiredSkills: _selectedSkills,
-                  postedBy: 'You',
-                  posterUniversity: 'Your University',
-                  status: 'Open',
-                  createdAt: DateTime.now(),
-                );
+          onPressed: () {
+            if (_formKey.currentState!.validate() &&
+                _selectedSkills.isNotEmpty) {
+              final newGig = Gig(
+                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                title: _titleController.text,
+                description: _descriptionController.text,
+                budget: int.tryParse(_budgetController.text) ?? 0,
+                deadline: _deadlineController.text,
+                requiredSkills: _selectedSkills,
+                postedBy: 'You',
+                posterUniversity: 'Your University',
+                status: 'Open',
+                createdAt: DateTime.now(),
+              );
 
-                // Add to provider if available
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Gig posted successfully!'),
-                    backgroundColor: Color(0xFF2ECC71),
-                  ),
-                );
-              } else if (_selectedSkills.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Please select at least one skill'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFFFC107),
-              padding: EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              'Post Gig',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              // Add to provider if available
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Gig posted successfully!'),
+                  backgroundColor: Color(0xFF2ECC71),
+                ),
+              );
+            } else if (_selectedSkills.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Please select at least one skill'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFFFC107),
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
+          child: const Text(
+            'Post Gig',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
-
     );
   }
 

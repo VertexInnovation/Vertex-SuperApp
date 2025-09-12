@@ -13,7 +13,6 @@ class QuickMatchTab extends StatefulWidget {
 
 class _QuickMatchTabState extends State<QuickMatchTab> {
   late List<QuickMatchModel> quickMatchListValue;
-  final int _counter = 0;
   late CardController controller;
   bool isDeckEmpty = false;
   @override

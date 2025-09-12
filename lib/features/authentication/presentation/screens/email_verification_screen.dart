@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vertex_app/colors.dart';
 import '../../auth_manager.dart';
 import '../signin_page.dart';
 import '../signup_page.dart';
