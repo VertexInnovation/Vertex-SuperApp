@@ -59,7 +59,8 @@ class _ProfileTabState extends State<ProfileTab> {
                     width: 120,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: BoxBorder.all(color: Colors.amber, width: 2),
+                        border: 
+                        Border.all(color: Colors.amber, width: 2),
                         image: const DecorationImage(
                             image: AssetImage(
                                 "assets/images/sample_mike_image.png"))),
@@ -190,11 +191,11 @@ class _ProfileTabState extends State<ProfileTab> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border:
-                      BoxBorder.all(color: Colors.blueGrey.shade800, width: 1),
+                      Border.all(color: VertexColors.button1background, width: 1),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Padding(
-                  padding: const EdgeInsetsGeometry.all(14),
+                  padding: const EdgeInsets.all(14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -397,7 +398,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                           backgroundColor: Colors.amber,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(
+                                                BorderRadius.circular(
                                                     14),
                                           ),
                                         ),
@@ -456,7 +457,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                           backgroundColor: Colors.amber,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(
+                                                BorderRadius.circular(
                                                     14),
                                           ),
                                         ),
@@ -515,7 +516,7 @@ class _ProfileTabState extends State<ProfileTab> {
                                           backgroundColor: Colors.amber,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadiusGeometry.circular(
+                                                BorderRadius.circular(
                                                     14),
                                           ),
                                         ),
@@ -548,7 +549,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     backgroundColor: VertexColors.button1background,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(14),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                   ),
                   icon: const Icon(
