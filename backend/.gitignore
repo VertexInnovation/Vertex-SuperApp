@@ -1,1 +1,5 @@
 node_modules/
+client_secret_980548095841-72hv2vkj548n4gsrt4g2r773585vspaf.apps.googleusercontent.com.json
+serviceAccountKey.json
+google-services.json
+firestore.indexes.json
