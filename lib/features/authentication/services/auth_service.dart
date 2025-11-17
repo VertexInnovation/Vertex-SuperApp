@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 class AuthException implements Exception {
   final String message;
@@ -16,17 +17,118 @@ class AuthService {
   static const String _userKey = 'auth_user';
   static const String _tokenKey = 'auth_token';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> resendVerificationEmail() async {
+  /// Sends a password reset email to the specified email address
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      if (email.isEmpty || !email.contains('@')) {
+        throw AuthException('Please enter a valid email address');
+      }
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'user-not-found':
+          message = 'No user found with this email address';
+          break;
+        case 'invalid-email':
+          message = 'The email address is not valid';
+          break;
+        default:
+          message = 'Failed to send password reset email: ${e.message}';
+      }
+      throw AuthException(message);
+    } catch (e) {
+      throw AuthException('Failed to send password reset email');
+    }
+  }
+
+  /// Sends a verification email to the current user
+  Future<void> sendVerificationEmail() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user != null && !user.emailVerified) {
+      if (user != null) {
         await user.sendEmailVerification();
       } else {
-        throw AuthException('No user found or email already verified');
+        throw AuthException('No authenticated user found');
       }
+    } on FirebaseAuthException catch (e) {
+      throw AuthException('Failed to send verification email: ${e.message}');
     } catch (e) {
-      throw AuthException(
-          'Failed to resend verification email: ${e.toString()}');
+      throw AuthException('Failed to send verification email');
+    }
+  }
+
+  /// Checks if the current user's email is verified
+  Future<bool> isEmailVerified() async {
+    try {
+      await FirebaseAuth.instance.currentUser?.reload();
+      return FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+    } catch (e) {
+      throw AuthException('Failed to check email verification status');
+    }
+  }
+
+  /// Tests social login functionality
+  Future<Map<String, dynamic>> testSocialLogin(int provider) async {
+    try {
+      late UserCredential userCredential;
+      String providerName;
+
+      switch (provider) {
+        case 1: // Google
+          providerName = 'Google';
+          final googleUser = await GoogleSignIn().signIn();
+          if (googleUser == null) throw AuthException('Google Sign-In cancelled');
+          
+          final googleAuth = await googleUser.authentication;
+          userCredential = await FirebaseAuth.instance.signInWithCredential(
+            GoogleAuthProvider.credential(
+              accessToken: googleAuth.accessToken,
+              idToken: googleAuth.idToken,
+            ),
+          );
+          break;
+
+        case 2: // Facebook
+          providerName = 'Facebook';
+          final loginResult = await FacebookAuth.instance.login();
+          if (loginResult.status != LoginStatus.success) {
+            throw AuthException('Facebook login failed');
+          }
+          
+          final accessToken = loginResult.accessToken!;
+          userCredential = await FirebaseAuth.instance.signInWithCredential(
+            FacebookAuthProvider.credential(accessToken.token),
+          );
+          break;
+
+        case 3: // GitHub
+          providerName = 'GitHub';
+          final githubProvider = OAuthProvider('github.com')
+            ..addScope('read:user')
+            ..addScope('user:email');
+          
+          userCredential = await FirebaseAuth.instance.signInWithProvider(githubProvider);
+          break;
+
+        default:
+          throw AuthException('Invalid provider');
+      }
+
+      // If login successful, return user info
+      return {
+        'success': true,
+        'provider': providerName,
+        'email': userCredential.user?.email,
+        'name': userCredential.user?.displayName,
+        'uid': userCredential.user?.uid,
+      };
+    } catch (e) {
+      return {
+        'success': false,
+        'error': e.toString(),
+        'provider': provider == 1 ? 'Google' : provider == 2 ? 'Facebook' : 'GitHub',
+      };
     }
   }
 
